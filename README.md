@@ -68,7 +68,7 @@ iPhone Safari／Android Chrome 開啟後，選「加入主畫面」。已設好 
 
 ## 客製
 
-- **每日一句**：`index.html` 裡的 `QUOTES` 陣列（目前 113 句），`a` 留空就不顯示出處。
+- **每日一句**：`index.html` 裡的 `QUOTES` 陣列（目前 13 句），`a` 留空就不顯示出處。
 - **記帳分類**：`CATS` 陣列（代碼字、key、顯示名），顏色是 CSS 的 `--c-food` 等變數。
 - **心情**：`MOODS` 陣列。
 - **配色**：CSS 的 `:root[data-skin="parasol"]` 區塊，季節色相在下面四行 `[data-season]`。
