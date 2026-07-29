@@ -563,6 +563,10 @@
   .sheet .acts button:hover, .sheet .acts label:hover { border-color: var(--accent); color: var(--accent); }
   .sheet .acts .hint { color: var(--ink-faint); font-size: .74rem; letter-spacing: .06em; }
   .sheet .close { margin-top: 16px; width: 100%; text-align: center; color: var(--ink-faint); font-size: .84rem; padding: 8px; }
+  .sheet .ver {
+    margin-top: 14px; text-align: center; font-family: var(--num);
+    font-size: .66rem; letter-spacing: .06em; color: var(--ink-faint);
+  }
 
   /* 存檔提示 */
   .saved {
@@ -879,6 +883,8 @@
 
   /* ── 資料 ────────────────────────────────────────────── */
   var MODE_KEY = "jincao-mode";
+  /* build.js 會把這行換成建置日期＋內容雜湊；直接開來源檔就維持 dev */
+  var BUILD = "dev";
   var store = load();
   var state = {
     tab: "today", date: today(), month: today().slice(0, 7), newCat: "food",
@@ -1632,6 +1638,7 @@
         '<label><span>匯入備份檔</span><span class="hint">合併 JSON</span>' +
           '<input type="file" accept=".json,application/json" id="impFile" class="sr" /></label>' +
       "</div>" +
+      '<div class="ver">' + (BUILD === "dev" ? "預覽版（未建置）" : "版本 " + esc(BUILD)) + "</div>" +
       '<button class="close">關閉</button></div>';
     document.body.appendChild(bg);
     bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.remove(); });

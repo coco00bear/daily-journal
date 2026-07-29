@@ -8,9 +8,23 @@
  */
 var fs = require("fs");
 var path = require("path");
+var crypto = require("crypto");
 
 var dir = __dirname;
 var src = fs.readFileSync(path.join(dir, "index.html"), "utf8");
+
+/* 版本＝建置日期＋來源檔內容雜湊，會顯示在備份面板最下面一行。
+   有雜湊才能確認兩個網址跑的是不是同一份程式。 */
+var now = new Date();
+var stamp = now.getFullYear() + "-" +
+  String(now.getMonth() + 1).padStart(2, "0") + "-" +
+  String(now.getDate()).padStart(2, "0");
+var hash = crypto.createHash("sha1").update(src).digest("hex").slice(0, 7);
+var build = stamp + " · " + hash;
+if (!/var BUILD = "dev";/.test(src)) {
+  console.warn("！index.html 裡找不到 BUILD 那一行，版本號不會被寫入");
+}
+src = src.replace('var BUILD = "dev";', 'var BUILD = "' + build + '";');
 
 /* 片段裡自帶的 title 與 viewport 要拿掉，改由下面的 <head> 提供 */
 var title = (src.match(/<title>([^<]*)<\/title>/) || [])[1] || "今日草木";
