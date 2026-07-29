@@ -11,8 +11,10 @@
 | 檔案 | 用途 |
 |---|---|
 | `index.html` | **來源檔**。給 Claude Artifact 用的 body 片段（沒有 doctype／`<head>`，發布時由 Artifact 補上） |
-| `build.js` | 把 `index.html` 包成可獨立開啟的 `docs/index.html` |
+| `build.js` | 把 `index.html` 包成可獨立開啟的 `docs/index.html`，並產生 `manifest.webmanifest` |
+| `tools/make-icons.js` | 產生 `docs/` 底下的 PNG 圖示（只有換圖示時才需要跑） |
 | `docs/index.html` | **產生檔**，GitHub Pages 就是吃這個。不要手改，改 `index.html` 後重跑 build |
+| `docs/*.png` | 圖示。iOS 主畫面只讀 `apple-touch-icon` 且不支援 SVG，所以一律備 PNG |
 
 ## 改東西的流程
 

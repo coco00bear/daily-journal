@@ -19,10 +19,25 @@ var body = src
   .replace(/<title>[^<]*<\/title>\s*/i, "")
   .trim();
 
-var icon = encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
-  '<text y=".9em" font-size="90">🌿</text></svg>'
-);
+/* 圖示用 PNG：iOS 的 apple-touch-icon 不支援 SVG，部分瀏覽器的分頁圖示
+   也不吃 SVG data URI。PNG 由 tools/make-icons.js 產生並已 commit。 */
+var manifest = {
+  name: title,
+  short_name: "今日草木",
+  description: "每日記錄：記帳、完成清單、運動、感受與心情。",
+  lang: "zh-Hant",
+  start_url: ".",
+  scope: ".",
+  display: "standalone",
+  orientation: "portrait",
+  background_color: "#F6EFEA",
+  theme_color: "#F6EFEA",
+  icons: [
+    { src: "icon-192.png", sizes: "192x192", type: "image/png" },
+    { src: "icon-512.png", sizes: "512x512", type: "image/png" },
+    { src: "icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" }
+  ]
+};
 
 var page = [
   "<!doctype html>",
@@ -35,9 +50,14 @@ var page = [
   /* 手機瀏覽器的網址列顏色，跟白底／黑底對齊 */
   '<meta name="theme-color" content="#F6EFEA" media="(prefers-color-scheme: light)" />',
   '<meta name="theme-color" content="#100B0D" media="(prefers-color-scheme: dark)" />',
+  /* iOS 加到主畫面用這兩個：capable 決定有沒有網址列，title 決定圖示下的字 */
   '<meta name="apple-mobile-web-app-capable" content="yes" />',
-  '<meta name="apple-mobile-web-app-title" content="' + title + '" />',
-  '<link rel="icon" href="data:image/svg+xml,' + icon + '" />',
+  '<meta name="apple-mobile-web-app-status-bar-style" content="default" />',
+  '<meta name="apple-mobile-web-app-title" content="今日草木" />',
+  '<link rel="apple-touch-icon" href="icon-180.png" />',
+  '<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />',
+  '<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />',
+  '<link rel="manifest" href="manifest.webmanifest" />',
   "<style>body{margin:0;padding:0}img{max-width:100%}</style>",
   "</head>",
   "<body>",
@@ -49,4 +69,14 @@ var page = [
 
 fs.mkdirSync(path.join(dir, "docs"), { recursive: true });
 fs.writeFileSync(path.join(dir, "docs", "index.html"), page);
+fs.writeFileSync(path.join(dir, "docs", "manifest.webmanifest"),
+  JSON.stringify(manifest, null, 2) + "\n");
 console.log("docs/index.html 已更新（" + page.length + " 字元）");
+console.log("docs/manifest.webmanifest 已更新");
+
+/* 圖示是 tools/make-icons.js 產生的，缺了就提醒一下 */
+["icon-180.png", "icon-192.png", "icon-512.png", "favicon-32.png"].forEach(function (f) {
+  if (!fs.existsSync(path.join(dir, "docs", f))) {
+    console.warn("！缺少 docs/" + f + " —— 請跑 node tools/make-icons.js");
+  }
+});
