@@ -31,12 +31,14 @@ GitHub Pages 大約一分鐘後生效。
 
 ## 部署設定（只需做一次）
 
-GitHub 的 repo → **Settings** → **Pages**：
+repo：<https://github.com/coco00bear/-daily-journal>
+
+**Settings** → **Pages**：
 
 - Source：`Deploy from a branch`
 - Branch：`main` ／ 目錄選 **`/docs`**
 
-網址會是 `https://<帳號>.github.io/<repo 名稱>/`。
+網址會是 <https://coco00bear.github.io/-daily-journal/>。
 
 ## 資料搬移
 
