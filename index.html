@@ -172,7 +172,7 @@
   :root[data-skin="parasol"] .rm.letgo {
     border: none; background: var(--cream); border-radius: 999px;
   }
-  :root[data-skin="parasol"] .cats button { width: 36px; height: 36px; }
+  :root[data-skin="parasol"] .cats button { padding: 8px 15px; }
   :root[data-skin="parasol"] .ex-pick button[aria-pressed="true"] { background: var(--accent); color: var(--card); }
   :root[data-skin="parasol"] .ex-pick button[aria-pressed="true"][data-ex="none"] {
     background: var(--line-strong); color: var(--card);
@@ -344,9 +344,8 @@
   }
   .exp-row .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .exp-row .cat {
-    font-family: var(--serif); font-size: .8rem; width: 22px; height: 22px;
-    display: grid; place-items: center; border-radius: 50%;
-    color: #fff; flex: none;
+    font-size: .68rem; letter-spacing: .06em; padding: 3px 9px;
+    border-radius: 999px; color: #fff; flex: none; white-space: nowrap;
   }
   .exp-row .val { font-family: var(--num); font-variant-numeric: tabular-nums; font-size: .92rem; }
   .exp-row .del { color: var(--ink-faint); font-size: 1.1rem; line-height: 1; padding: 0 2px; }
@@ -364,8 +363,8 @@
   .exp-add .line2 .field.money { flex: 1; font-family: var(--num); font-variant-numeric: tabular-nums; }
   .cats { display: flex; gap: 6px; flex-wrap: wrap; }
   .cats button {
-    font-family: var(--serif); font-size: .88rem;
-    width: 34px; height: 34px; border-radius: 50%;
+    font-size: .82rem; letter-spacing: .04em; padding: 7px 14px;
+    border-radius: 999px;
     border: 1px solid var(--line); color: var(--ink-soft);
   }
   .cats button[aria-pressed="true"] { color: #fff; border-color: transparent; }
@@ -495,8 +494,8 @@
   .stat .v small { font-size: .7rem; color: var(--ink-faint); letter-spacing: .06em; }
 
   .bars { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
-  .bar-row { display: grid; grid-template-columns: 20px 1fr 74px; gap: 10px; align-items: center; }
-  .bar-row .cn { font-family: var(--serif); font-size: .9rem; color: var(--ink-soft); text-align: center; }
+  .bar-row { display: grid; grid-template-columns: 42px 1fr 74px; gap: 10px; align-items: center; }
+  .bar-row .cn { font-size: .74rem; letter-spacing: .04em; color: var(--ink-soft); }
   .bar-track { height: 7px; background: var(--wash); border-radius: 20px; overflow: hidden; }
   /* 這是個 span，一定要 block —— inline 元素吃不到 width/height/transform */
   .bar-fill { display: block; height: 100%; border-radius: 20px; transition: width .5s ease; }
@@ -721,14 +720,15 @@
 
   /* ── 常數 ────────────────────────────────────────────── */
   var KEY = "jincao-journal-v1";
+  /* k 是存進資料的代碼（不要改，舊記錄靠它對應），n 是畫面上顯示的名稱 */
   var CATS = [
-    { c: "食", k: "food",  n: "飲食" },
-    { c: "行", k: "move",  n: "交通" },
-    { c: "居", k: "home",  n: "居家" },
-    { c: "玩", k: "play",  n: "娛樂" },
-    { c: "健", k: "well",  n: "健康" },
-    { c: "學", k: "learn", n: "學習" },
-    { c: "他", k: "etc",   n: "其他" }
+    { k: "food",  n: "飲食" },
+    { k: "move",  n: "交通" },
+    { k: "home",  n: "居家" },
+    { k: "play",  n: "娛樂" },
+    { k: "well",  n: "健康" },
+    { k: "learn", n: "學習" },
+    { k: "etc",   n: "其他" }
   ];
   var MOODS = [
     { e: "☀️", l: "晴朗" }, { e: "🌤", l: "還不錯" }, { e: "⛅", l: "平常" }, { e: "🌙", l: "平靜" },
@@ -1156,8 +1156,8 @@
     var box = document.getElementById("catPick");
     box.innerHTML = CATS.map(function (c) {
       var on = c.k === state.newCat;
-      return '<button data-cat="' + c.k + '" aria-pressed="' + on + '" title="' + c.n + '"' +
-        (on ? ' style="background:var(--c-' + c.k + ')"' : "") + ">" + c.c + "</button>";
+      return '<button data-cat="' + c.k + '" aria-pressed="' + on + '"' +
+        (on ? ' style="background:var(--c-' + c.k + ')"' : "") + ">" + c.n + "</button>";
     }).join("");
     box.querySelectorAll("[data-cat]").forEach(function (b) {
       b.addEventListener("click", function () { state.newCat = b.dataset.cat; renderCats(); });
@@ -1248,7 +1248,7 @@
     box.innerHTML = e.expenses.map(function (x) {
       var c = CATS.filter(function (k) { return k.k === x.cat; })[0] || CATS[6];
       return '<div class="exp-row"><span class="nm">' + esc(x.item) + "</span>" +
-        '<span class="meta"><span class="cat" style="background:var(--c-' + c.k + ')" title="' + c.n + '">' + c.c + "</span>" +
+        '<span class="meta"><span class="cat" style="background:var(--c-' + c.k + ')">' + c.n + "</span>" +
         '<span class="val">' + money(+x.amount || 0) + "</span></span>" +
         '<button class="del" data-del="' + x.id + '" aria-label="刪除 ' + esc(x.item) + '">×</button></div>';
     }).join("") +
@@ -1422,7 +1422,7 @@
 
     h += '<div class="bars" style="margin-top:20px">' + CATS.map(function (c) {
       var v = catSum[c.k] || 0;
-      return '<div class="bar-row"><span class="cn">' + c.c + "</span>" +
+      return '<div class="bar-row"><span class="cn">' + c.n + "</span>" +
         '<span class="bar-track"><span class="bar-fill" style="width:' +
         (v / catMax * 100).toFixed(1) + "%;background:var(--c-" + c.k + ')"></span></span>' +
         '<span class="bv">' + (v ? money(v) : "—") + "</span></div>";
