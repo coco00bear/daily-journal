@@ -583,6 +583,16 @@
     font-size: .66rem; letter-spacing: .06em; color: var(--ink-faint);
   }
 
+  /* 有新版的提示（裝到主畫面之後沒有網址列可以按重新載入） */
+  .newver {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    bottom: calc(86px + env(safe-area-inset-bottom)); z-index: 31;
+    background: var(--accent); color: var(--card); border: none;
+    border-radius: 999px; padding: 10px 20px;
+    font-size: .76rem; letter-spacing: .1em; box-shadow: var(--shadow);
+    animation: cardIn .35s cubic-bezier(.2,.8,.2,1) both;
+  }
+
   /* 存檔提示 */
   .saved {
     position: fixed; left: 50%; transform: translateX(-50%);
@@ -900,7 +910,7 @@
   /* ── 資料 ────────────────────────────────────────────── */
   var MODE_KEY = "jincao-mode";
   /* build.js 會把這行換成建置日期＋內容雜湊；直接開來源檔就維持 dev */
-  var BUILD = "2026-07-29 · 2ca7d8d";
+  var BUILD = "2026-07-29 · 7a7d612";
   var store = load();
   var state = {
     tab: "today", date: today(), month: today().slice(0, 7), newCat: "food",
@@ -1653,6 +1663,7 @@
         '<button data-a="md"><span>匯出可讀日記</span><span class="hint">Markdown</span></button>' +
         '<label><span>匯入備份檔</span><span class="hint">合併 JSON</span>' +
           '<input type="file" accept=".json,application/json" id="impFile" class="sr" /></label>' +
+        '<button data-a="reload"><span>重新載入</span><span class="hint">取得最新版</span></button>' +
       "</div>" +
       '<div class="ver">' + (BUILD === "dev" ? "預覽版（未建置）" : "版本 " + esc(BUILD)) + "</div>" +
       '<button class="close">關閉</button></div>';
@@ -1664,6 +1675,9 @@
     });
     bg.querySelector('[data-a="md"]').addEventListener("click", function () {
       download("今日草木-" + today() + ".md", toMarkdown(), "text/markdown");
+    });
+    bg.querySelector('[data-a="reload"]').addEventListener("click", function () {
+      hardReload(String(Date.now()));
     });
     bg.querySelector("#impFile").addEventListener("change", function (ev) {
       var f = ev.target.files && ev.target.files[0];
@@ -1722,6 +1736,34 @@
     return out.join("\n");
   }
 
+  /* ── 檢查有沒有新版 ───────────────────────────────────────
+     GitHub Pages 給的是 max-age=600，關掉再打開有可能還是拿快取裡的舊版；
+     裝到主畫面之後又沒有網址列可以按重新載入，所以自己問。
+     version.txt 由 build.js 產生；直接開來源檔（BUILD=dev）就不用查。 */
+  function hardReload(v) {
+    /* 換一個沒被快取過的網址，比 location.reload() 可靠 */
+    location.replace(location.pathname + "?v=" + encodeURIComponent(v));
+  }
+  function checkUpdate() {
+    if (BUILD === "dev" || !window.fetch) return;
+    fetch("version.txt?t=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.text() : null; })
+      .then(function (t) {
+        var v = (t || "").trim();
+        if (!v || v === BUILD || document.getElementById("newver")) return;
+        /* 已經帶著這個版本重載過卻還是舊的（中間有人在快取搞鬼）就別再提示，
+           免得變成點一下、重載、又提示的無盡循環 */
+        if (location.search.indexOf("v=" + encodeURIComponent(v)) >= 0) return;
+        var b = document.createElement("button");
+        b.id = "newver";
+        b.className = "newver";
+        b.textContent = "有新版 · 點一下更新";
+        b.addEventListener("click", function () { hardReload(v); });
+        document.body.appendChild(b);
+      })
+      .catch(function () { /* 離線或讀不到就算了，不要吵 */ });
+  }
+
   /* ── 主題 / 導覽 ──────────────────────────────────────── */
   function render() {
     document.querySelectorAll("nav.tabs button").forEach(function (b) {
@@ -1748,14 +1790,15 @@
     if (state.tab === "garden") drawTree();
   });
 
-  /* 每天第一次打開，回到今天 */
+  /* 每次回到前景就順便看有沒有新版 */
   document.addEventListener("visibilitychange", function () {
-    if (!document.hidden && state.tab === "today" && state.date !== today() && state.date < today()) return;
+    if (!document.hidden) checkUpdate();
   });
 
   document.documentElement.setAttribute("data-skin", "parasol");
   applyMode();
   render();
+  checkUpdate();
 })();
 </script>
 </body>

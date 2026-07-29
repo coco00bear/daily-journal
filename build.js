@@ -85,8 +85,11 @@ fs.mkdirSync(path.join(dir, "docs"), { recursive: true });
 fs.writeFileSync(path.join(dir, "docs", "index.html"), page);
 fs.writeFileSync(path.join(dir, "docs", "manifest.webmanifest"),
   JSON.stringify(manifest, null, 2) + "\n");
+/* App 會繞過快取讀這支來判斷手上是不是舊版 */
+fs.writeFileSync(path.join(dir, "docs", "version.txt"), build + "\n");
 console.log("docs/index.html 已更新（" + page.length + " 字元）");
 console.log("docs/manifest.webmanifest 已更新");
+console.log("docs/version.txt = " + build);
 
 /* 圖示是 tools/make-icons.js 產生的，缺了就提醒一下 */
 ["icon-180.png", "icon-192.png", "icon-512.png", "favicon-32.png"].forEach(function (f) {

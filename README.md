@@ -15,6 +15,7 @@
 | `tools/make-icons.js` | 產生 `docs/` 底下的 PNG 圖示（只有換圖示時才需要跑） |
 | `docs/index.html` | **產生檔**，GitHub Pages 就是吃這個。不要手改，改 `index.html` 後重跑 build |
 | `docs/*.png` | 圖示。iOS 主畫面只讀 `apple-touch-icon` 且不支援 SVG，所以一律備 PNG |
+| `docs/version.txt` | 版本字串。App 會繞過快取讀它，發現與手上不同就提示更新 |
 
 ## 改東西的流程
 
@@ -30,6 +31,16 @@ git add -A && git commit -m "調整：..." && git push
 ```
 
 GitHub Pages 大約一分鐘後生效。
+
+### 舊版快取
+
+GitHub Pages 固定回 `Cache-Control: max-age=600`（免費方案改不了），所以關掉再打開有機會還是舊版，最多 10 分鐘。App 自己有處理：
+
+- 每次開啟／回到前景時，繞過快取讀 `version.txt`，跟頁面內的 `BUILD` 比對
+- 不一樣就在畫面下方浮出「有新版 · 點一下更新」，點了會用 `?v=<新版本>` 重新載入（換一個沒被快取過的網址，比 `location.reload()` 可靠）
+- 也可以自己來：右上角三條線 → **重新載入**
+
+版本號顯示在備份面板最下面一行，格式是 `建置日期 · 來源檔 sha1 前七碼`。
 
 ## 部署設定（只需做一次）
 
