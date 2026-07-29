@@ -1,0 +1,1751 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>今日草木 — 每日生活記錄</title>
+<meta name="description" content="每日記錄：記帳、完成清單、運動、感受與心情。資料只存在自己的瀏覽器裡。" />
+<meta name="theme-color" content="#F6EFEA" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#100B0D" media="(prefers-color-scheme: dark)" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="今日草木 — 每日生活記錄" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%8C%BF%3C%2Ftext%3E%3C%2Fsvg%3E" />
+<style>body{margin:0;padding:0}img{max-width:100%}</style>
+</head>
+<body>
+<style>
+  /* ── 季節色基底（隨月份切換 data-season） ───────────────── */
+  :root[data-season="spring"] { --h-base:#4C7A2E; --h-leaf:#9CBF6A; --h-tint:#E9F0DF; }
+  :root[data-season="summer"] { --h-base:#1F6B5B; --h-leaf:#6FB7A0; --h-tint:#DFEDE8; }
+  :root[data-season="autumn"] { --h-base:#A4562A; --h-leaf:#D99A4E; --h-tint:#F2E7D8; }
+  :root[data-season="winter"] { --h-base:#3B5C79; --h-leaf:#8FB0C6; --h-tint:#E3EAEF; }
+  :root { --h-base:#1F6B5B; --h-leaf:#6FB7A0; --h-tint:#DFEDE8; }
+
+  /* ── 主題 token（淺） ──────────────────────────────────── */
+  :root {
+    --accent: var(--h-base);
+    --leaf:   var(--h-leaf);
+    --paper:  color-mix(in oklab, var(--h-tint) 55%, #FAFAF7 45%);
+    --card:   color-mix(in oklab, var(--h-tint) 16%, #FFFFFF 84%);
+    --ink:      color-mix(in oklab, var(--h-base) 22%, #17201B 78%);
+    --ink-soft: color-mix(in oklab, var(--h-base) 26%, #5C6862 74%);
+    --ink-faint:color-mix(in oklab, var(--h-base) 18%, #8D968F 82%);
+    --line:   color-mix(in oklab, var(--h-base) 16%, #D4D9D0 84%);
+    --line-strong: color-mix(in oklab, var(--h-base) 34%, #B9C1B7 66%);
+    --wash:   color-mix(in oklab, var(--h-base) 8%, transparent);
+    --shadow: 0 1px 2px color-mix(in oklab, var(--h-base) 12%, transparent),
+              0 8px 24px -12px color-mix(in oklab, var(--h-base) 22%, transparent);
+
+    --c-food:#B4763A; --c-move:#3E7A8C; --c-home:#6B7F4A; --c-play:#A85C74;
+    --c-well:#4F6BA8; --c-learn:#8B6BA8; --c-etc:#7C8477;
+
+    --serif: "Songti TC","Noto Serif TC","Source Han Serif TC","Noto Serif CJK TC","PMingLiU","MingLiU",Georgia,serif;
+    --sans: "PingFang TC","Microsoft JhengHei","Noto Sans TC","Helvetica Neue",system-ui,sans-serif;
+    --num: ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+
+    --sp: clamp(16px, 4.5vw, 26px);
+    --radius: 3px;
+  }
+
+  /* ── 主題 token（深） ──────────────────────────────────────
+     data-mode = 標頭明暗鈕手動指定（light／dark）；沒有這個屬性時
+     才跟隨系統或 Claude 頁面的 data-theme。 */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-mode]):not([data-theme="light"]) {
+      --accent: color-mix(in oklab, var(--h-base) 52%, #E8F2EC 48%);
+      --leaf:   color-mix(in oklab, var(--h-leaf) 78%, #0D120F 22%);
+      --paper:  color-mix(in oklab, var(--h-base) 11%, #0D1210 89%);
+      --card:   color-mix(in oklab, var(--h-base) 15%, #141A17 85%);
+      --ink:      color-mix(in oklab, var(--h-base) 8%, #E7EEE9 92%);
+      --ink-soft: color-mix(in oklab, var(--h-base) 14%, #A3AEA7 86%);
+      --ink-faint:color-mix(in oklab, var(--h-base) 16%, #6E7A73 84%);
+      --line:   color-mix(in oklab, var(--h-base) 22%, #2A322D 78%);
+      --line-strong: color-mix(in oklab, var(--h-base) 34%, #3D473F 66%);
+      --wash:   color-mix(in oklab, var(--h-base) 16%, transparent);
+      --shadow: 0 1px 2px #0000004d, 0 10px 28px -14px #00000073;
+      --c-food:#C98A4C; --c-move:#5C9AAC; --c-home:#8A9E63; --c-play:#C4798F;
+      --c-well:#7189C4; --c-learn:#A78AC4; --c-etc:#96A091;
+    }
+  }
+  :root[data-theme="dark"]:not([data-mode]),
+  :root[data-mode="dark"] {
+    --accent: color-mix(in oklab, var(--h-base) 52%, #E8F2EC 48%);
+    --leaf:   color-mix(in oklab, var(--h-leaf) 78%, #0D120F 22%);
+    --paper:  color-mix(in oklab, var(--h-base) 11%, #0D1210 89%);
+    --card:   color-mix(in oklab, var(--h-base) 15%, #141A17 85%);
+    --ink:      color-mix(in oklab, var(--h-base) 8%, #E7EEE9 92%);
+    --ink-soft: color-mix(in oklab, var(--h-base) 14%, #A3AEA7 86%);
+    --ink-faint:color-mix(in oklab, var(--h-base) 16%, #6E7A73 84%);
+    --line:   color-mix(in oklab, var(--h-base) 22%, #2A322D 78%);
+    --line-strong: color-mix(in oklab, var(--h-base) 34%, #3D473F 66%);
+    --wash:   color-mix(in oklab, var(--h-base) 16%, transparent);
+    --shadow: 0 1px 2px #0000004d, 0 10px 28px -14px #00000073;
+    --c-food:#C98A4C; --c-move:#5C9AAC; --c-home:#8A9E63; --c-play:#C4798F;
+    --c-well:#7189C4; --c-learn:#A78AC4; --c-etc:#96A091;
+  }
+
+  /* ── 外觀：傘下（唯一皮膚） ────────────────────────────────
+     現代 App 風：大圓角白卡片、緋紅＋奶油、藥丸按鈕、柔和陰影。
+     淺／深底色由標頭明暗鈕（data-mode）決定，季節只微調色相。
+     data-skin 由 JS 固定寫成 parasol，這一層保留是為了壓過上面
+     的通用 token，不是給使用者切換的。 */
+  :root[data-skin="parasol"] {
+    --radius: 16px;
+    --serif: var(--sans);
+    --accent: var(--h-base);
+    --leaf:   var(--h-leaf);
+    --paper:  #F6EFEA;
+    --card:   #FFFFFF;
+    --cream:  #FBEBD7;          /* 卡片裡的次級底色（輸入框、格子、統計塊） */
+    --ink:      #241A1D;
+    --ink-soft: #6E5E63;
+    --ink-faint:#A2949A;
+    --line:        #F1E5E7;
+    --line-strong: #E2CFD3;
+    --wash: color-mix(in oklab, var(--h-base) 6%, transparent);
+    --shadow: 0 2px 4px #2a1a1e0a, 0 14px 30px -14px #2a1a1e26;
+  }
+  :root[data-skin="parasol"][data-season="spring"] { --h-base:#C8536B; --h-leaf:#E3A83E; }
+  :root[data-skin="parasol"][data-season="summer"] { --h-base:#C4485E; --h-leaf:#E9A03B; }
+  :root[data-skin="parasol"][data-season="autumn"] { --h-base:#BC4F4A; --h-leaf:#DF8F35; }
+  :root[data-skin="parasol"][data-season="winter"] { --h-base:#B04559; --h-leaf:#D79A5C; }
+
+  :root[data-skin="parasol"][data-theme="dark"]:not([data-mode]),
+  :root[data-skin="parasol"][data-mode="dark"] {
+    --paper:  #100B0D;
+    --card:   #1C1518;
+    --cream:  #2A1F23;
+    --ink:      #F4E9EA;
+    --ink-soft: #B6A4A8;
+    --ink-faint:#7E6E72;
+    --line:        #2A2124;
+    --line-strong: #3D3034;
+    --accent: color-mix(in oklab, var(--h-base) 55%, #FFE9EC 45%);
+    --leaf:   color-mix(in oklab, var(--h-leaf) 82%, #FFFFFF 18%);
+    --wash: color-mix(in oklab, var(--h-base) 18%, transparent);
+    --shadow: 0 2px 4px #00000059, 0 16px 32px -16px #000000a6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root[data-skin="parasol"]:not([data-mode]):not([data-theme="light"]) {
+      --paper:  #100B0D;
+      --card:   #1C1518;
+      --cream:  #2A1F23;
+      --ink:      #F4E9EA;
+      --ink-soft: #B6A4A8;
+      --ink-faint:#7E6E72;
+      --line:        #2A2124;
+      --line-strong: #3D3034;
+      --accent: color-mix(in oklab, var(--h-base) 55%, #FFE9EC 45%);
+      --leaf:   color-mix(in oklab, var(--h-leaf) 82%, #FFFFFF 18%);
+      --wash: color-mix(in oklab, var(--h-base) 18%, transparent);
+      --shadow: 0 2px 4px #00000059, 0 16px 32px -16px #000000a6;
+    }
+  }
+
+  /* 版面：拿掉紙紋與細線，改成一塊塊浮起來的卡片 */
+  :root[data-skin="parasol"] body::after { opacity: 0; }
+  :root[data-skin="parasol"] .season-band { height: 0; }
+  :root[data-skin="parasol"] .brand h1 { font-weight: 700; font-size: 1.16rem; letter-spacing: .1em; }
+  :root[data-skin="parasol"] .datehead { border-bottom: none; padding-bottom: 2px; }
+  :root[data-skin="parasol"] .datehead .d-num { font-weight: 700; letter-spacing: -.015em; }
+  :root[data-skin="parasol"] .nav-day button {
+    border: none; background: var(--card); box-shadow: var(--shadow); color: var(--accent);
+  }
+  :root[data-skin="parasol"] section.block {
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 20px 18px 18px; margin-top: 14px;
+  }
+  :root[data-skin="parasol"] section.block + section.block { border-top: none; }
+  :root[data-skin="parasol"] .blabel span { font-weight: 600; letter-spacing: .12em; color: var(--ink); }
+  :root[data-skin="parasol"] .blabel .tail { display: none; }
+  :root[data-skin="parasol"] .blabel .amt { margin-left: auto; }
+  :root[data-skin="parasol"] .epigraph {
+    border-left: none; background: var(--card); box-shadow: var(--shadow);
+    border-radius: var(--radius); padding: 15px 17px; margin-top: 16px;
+  }
+  :root[data-skin="parasol"] .memory-line,
+  :root[data-skin="parasol"] .recap-note { border-left: none; background: var(--cream); border-radius: 12px; }
+
+  /* 輸入與按鈕：無框內凹底＋藥丸主鈕 */
+  :root[data-skin="parasol"] .field {
+    border: none; background: var(--cream); border-radius: 12px; padding: 12px 14px;
+  }
+  :root[data-skin="parasol"] .field:focus { box-shadow: inset 0 0 0 1.5px var(--accent); }
+  :root[data-skin="parasol"] .btn-add {
+    background: var(--accent); color: var(--card); border: none; border-radius: 999px;
+    padding: 12px 22px; font-weight: 600; letter-spacing: .06em;
+  }
+  :root[data-skin="parasol"] .btn-add:hover { filter: brightness(1.08); background: var(--accent); }
+  :root[data-skin="parasol"] .cats button,
+  :root[data-skin="parasol"] .ex-pick button,
+  :root[data-skin="parasol"] .freq button,
+  :root[data-skin="parasol"] .epigraph .swap,
+  :root[data-skin="parasol"] .from-tag,
+  :root[data-skin="parasol"] .rm.letgo {
+    border: none; background: var(--cream); border-radius: 999px;
+  }
+  :root[data-skin="parasol"] .cats button { width: 36px; height: 36px; }
+  :root[data-skin="parasol"] .ex-pick button[aria-pressed="true"] { background: var(--accent); color: var(--card); }
+  :root[data-skin="parasol"] .ex-pick button[aria-pressed="true"][data-ex="none"] {
+    background: var(--line-strong); color: var(--card);
+  }
+  :root[data-skin="parasol"] .moods button { border: none; background: var(--cream); border-radius: 14px; }
+  :root[data-skin="parasol"] .moods button[aria-pressed="true"] { background: var(--accent); }
+  :root[data-skin="parasol"] .moods button[aria-pressed="true"] .l { color: var(--card); }
+  :root[data-skin="parasol"] .exp-row,
+  :root[data-skin="parasol"] ul.list li { border-bottom: 1px solid var(--line); }
+  :root[data-skin="parasol"] .tick { border-color: var(--line-strong); }
+
+  /* 月曆：圓角奶油方塊 */
+  :root[data-skin="parasol"] .cal { gap: 7px; }
+  :root[data-skin="parasol"] .cal .cell { border: none; background: var(--cream); border-radius: 12px; }
+  :root[data-skin="parasol"] .cal .cell.blank { background: none; }
+  :root[data-skin="parasol"] .cal .cell.today { box-shadow: inset 0 0 0 2px var(--accent); }
+  :root[data-skin="parasol"] .cal button.cell:hover { box-shadow: inset 0 0 0 1.5px var(--accent); }
+  :root[data-skin="parasol"] .legend .ramp { border: none; }
+  :root[data-skin="parasol"] .sum-grid { background: none; border: none; gap: 10px; }
+  :root[data-skin="parasol"] .stat { background: var(--cream); border-radius: 14px; }
+  :root[data-skin="parasol"] .bar-track { background: var(--cream); }
+
+  /* 底部導覽與面板 */
+  :root[data-skin="parasol"] nav.tabs {
+    background: var(--card); border-top: none; border-radius: 20px 20px 0 0;
+    box-shadow: 0 -6px 26px -18px #2a1a1e59;
+  }
+  :root[data-skin="parasol"] nav.tabs button[aria-current="true"] .t { font-weight: 600; }
+  :root[data-skin="parasol"] .sheet { border: none; border-radius: 22px 22px 0 0; }
+  :root[data-skin="parasol"] .sheet .acts button,
+  :root[data-skin="parasol"] .sheet .acts label {
+    border: none; background: var(--cream); border-radius: 12px;
+  }
+  :root[data-skin="parasol"] .saved { border-radius: 999px; color: var(--card); }
+
+  /* ── 動畫 ────────────────────────────────────────────────
+     每次切換頁籤／日期都會重畫 #view，所以卡片是依序浮入。
+     偏好減少動態的使用者由下面既有的 prefers-reduced-motion 關掉。 */
+  /* 結尾一定要寫明確的 to —— 只有 from 的話，帶 fill-mode: both 時
+     結束狀態不保證回到基準值（分類長條就會卡在 scaleX(0)）。 */
+  @keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes pop    { 0% { transform: scale(.88); } 60% { transform: scale(1.05); } 100% { transform: none; } }
+  @keyframes barIn  { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  #view .datehead, #view .epigraph, #view .memory-line, #view section.block {
+    animation: cardIn .4s cubic-bezier(.2,.8,.2,1) both;
+  }
+  #view section.block:nth-of-type(1) { animation-delay: .04s; }
+  #view section.block:nth-of-type(2) { animation-delay: .09s; }
+  #view section.block:nth-of-type(3) { animation-delay: .14s; }
+  #view section.block:nth-of-type(4) { animation-delay: .19s; }
+  #view section.block:nth-of-type(5) { animation-delay: .24s; }
+  #view section.block:nth-of-type(6) { animation-delay: .29s; }
+
+  /* 選到的心情／運動／打勾會回彈一下 */
+  .moods button[aria-pressed="true"],
+  .ex-pick button[aria-pressed="true"],
+  .tick[aria-pressed="true"] { animation: pop .3s cubic-bezier(.2,1.4,.4,1); }
+  /* 點下去的即時回饋 */
+  .moods button:active, .ex-pick button:active, .cats button:active,
+  .freq button:active, .btn-add:active, .cal button.cell:active { transform: scale(.95); }
+
+  .bar-fill { transform-origin: left center; animation: barIn .6s cubic-bezier(.2,.8,.2,1) both; }
+  .bar-row:nth-child(2) .bar-fill { animation-delay: .05s; }
+  .bar-row:nth-child(3) .bar-fill { animation-delay: .10s; }
+  .bar-row:nth-child(4) .bar-fill { animation-delay: .15s; }
+  .bar-row:nth-child(5) .bar-fill { animation-delay: .20s; }
+  .bar-row:nth-child(6) .bar-fill { animation-delay: .25s; }
+  .bar-row:nth-child(7) .bar-fill { animation-delay: .30s; }
+
+  /* ── 基礎 ──────────────────────────────────────────────── */
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    padding-bottom: calc(74px + env(safe-area-inset-bottom));
+    transition: background-color .4s ease, color .4s ease;
+  }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  button { cursor: pointer; background: none; border: none; padding: 0; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip-path: inset(50%); }
+
+  .wrap { max-width: 580px; margin: 0 auto; padding: 0 var(--sp); position: relative; z-index: 2; }
+  .season-band { position: relative; z-index: 2; }
+
+  /* ── 頁首 ──────────────────────────────────────────────── */
+  .season-band { height: 3px; background: linear-gradient(90deg, var(--accent), var(--leaf) 55%, var(--accent)); }
+
+  header.top { padding-top: 22px; }
+  .brand {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  }
+  .brand h1 {
+    margin: 0; font-family: var(--serif); font-weight: 500;
+    font-size: 1.06rem; letter-spacing: 0.22em; color: var(--ink);
+  }
+  .brand .season-tag {
+    font-size: 0.66rem; letter-spacing: 0.2em; color: var(--ink-faint);
+    display: flex; align-items: center; gap: 8px; white-space: nowrap;
+  }
+  .icon-btn {
+    color: var(--ink-faint); padding: 6px; margin: -6px; line-height: 0;
+    border-radius: 50%;
+  }
+  /* 沒設尺寸的 inline SVG 會以 300×150 展開，把標頭按鈕擠出版面 */
+  .icon-btn svg { width: 17px; height: 17px; display: block; flex: none; }
+  .icon-btn:hover { color: var(--accent); }
+
+  .datehead {
+    display: flex; align-items: flex-end; gap: 14px;
+    margin-top: 18px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .datehead .d-main { flex: 1; min-width: 0; }
+  .datehead .d-num {
+    font-family: var(--serif); font-size: clamp(2rem, 9vw, 2.6rem); line-height: 1;
+    letter-spacing: 0.02em; text-wrap: balance; display: block;
+  }
+  .datehead .d-sub {
+    font-size: 0.72rem; letter-spacing: 0.16em; color: var(--ink-soft); margin-top: 9px;
+    display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center;
+  }
+  .streak { color: var(--accent); }
+  .nav-day { display: flex; gap: 2px; padding-bottom: 4px; }
+  .nav-day button {
+    width: 34px; height: 34px; border: 1px solid var(--line);
+    border-radius: 50%; color: var(--ink-soft);
+    display: grid; place-items: center;
+  }
+  .nav-day button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .nav-day button:disabled { opacity: .3; cursor: default; }
+
+  .memory-line {
+    margin-top: 14px; padding: 10px 14px; border-left: 2px solid var(--leaf);
+    background: var(--wash); font-size: 0.82rem; color: var(--ink-soft);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .memory-line b { font-weight: 500; color: var(--accent); letter-spacing: .1em; font-size: .74rem; }
+
+  /* ── 區塊 ──────────────────────────────────────────────── */
+  section.block { padding: 28px 0 4px; }
+  section.block + section.block { border-top: 1px solid var(--line); }
+  .blabel {
+    display: flex; align-items: center; gap: 9px; margin-bottom: 16px;
+  }
+  .blabel svg { width: 15px; height: 15px; flex: none; color: var(--accent); }
+  .blabel span {
+    font-size: 0.71rem; letter-spacing: 0.24em; color: var(--ink-soft);
+  }
+  .blabel .tail {
+    flex: 1; height: 1px; background: var(--line);
+  }
+  .blabel .amt {
+    font-family: var(--num); font-size: .76rem; letter-spacing: .04em;
+    color: var(--ink-faint); font-variant-numeric: tabular-nums;
+  }
+
+  /* 記帳 */
+  .exp-row {
+    display: grid; grid-template-columns: 1fr auto auto; gap: 10px;
+    align-items: center; padding: 9px 0; border-bottom: 1px dotted var(--line);
+  }
+  .exp-row .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .exp-row .cat {
+    font-family: var(--serif); font-size: .8rem; width: 22px; height: 22px;
+    display: grid; place-items: center; border-radius: 50%;
+    color: #fff; flex: none;
+  }
+  .exp-row .val { font-family: var(--num); font-variant-numeric: tabular-nums; font-size: .92rem; }
+  .exp-row .del { color: var(--ink-faint); font-size: 1.1rem; line-height: 1; padding: 0 2px; }
+  .exp-row .del:hover { color: #c05; }
+  .exp-row .meta { display: flex; align-items: center; gap: 9px; }
+
+  .exp-add { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .field {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 10px 12px; width: 100%; transition: border-color .2s;
+  }
+  .field::placeholder { color: var(--ink-faint); }
+  .field:focus { border-color: var(--accent); outline: none; }
+  .exp-add .line2 { display: flex; gap: 10px; }
+  .exp-add .line2 .field.money { flex: 1; font-family: var(--num); font-variant-numeric: tabular-nums; }
+  .cats { display: flex; gap: 6px; flex-wrap: wrap; }
+  .cats button {
+    font-family: var(--serif); font-size: .88rem;
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1px solid var(--line); color: var(--ink-soft);
+  }
+  .cats button[aria-pressed="true"] { color: #fff; border-color: transparent; }
+  .btn-add {
+    border: 1px solid var(--accent); color: var(--accent);
+    border-radius: var(--radius); padding: 10px 20px; white-space: nowrap;
+    font-size: .88rem; letter-spacing: .1em;
+  }
+  .btn-add:hover { background: var(--accent); color: var(--card); }
+
+  /* 清單（完成 / 明天） */
+  ul.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  ul.list li {
+    display: flex; align-items: flex-start; gap: 11px;
+    padding: 8px 0; border-bottom: 1px dotted var(--line);
+  }
+  .tick {
+    flex: none; margin-top: 4px; width: 17px; height: 17px; border-radius: 50%;
+    border: 1px solid var(--line-strong); display: grid; place-items: center;
+    color: transparent; transition: all .18s;
+  }
+  .tick svg { width: 10px; height: 10px; }
+  .tick[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--card); }
+  li.done .txt { color: var(--ink-faint); text-decoration: line-through; text-decoration-color: var(--line-strong); }
+  .txt { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .from-tag {
+    font-size: .64rem; letter-spacing: .12em; color: var(--leaf);
+    border: 1px solid var(--line); border-radius: 20px; padding: 1px 7px;
+    margin-left: 7px; white-space: nowrap; vertical-align: 2px;
+  }
+  .rm { color: var(--ink-faint); font-size: 1.05rem; line-height: 1; padding: 2px 3px; flex: none; }
+  .rm:hover { color: #c05; }
+  .empty { color: var(--ink-faint); font-size: .84rem; padding: 4px 0 10px; }
+
+  .add-inline { display: flex; gap: 9px; margin-top: 12px; }
+  .add-inline .field { flex: 1; }
+
+  /* 感受 */
+  .prompt { font-family: var(--serif); font-size: .92rem; color: var(--ink-soft); margin-bottom: 11px; }
+  textarea.feel {
+    min-height: 128px; resize: vertical; line-height: 1.85;
+    font-family: var(--serif); font-size: 1rem;
+  }
+
+  /* 心情 */
+  .moods { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; }
+  .moods button {
+    border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--card); padding: 11px 4px 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: all .2s;
+  }
+  .moods button .e { font-size: 1.4rem; line-height: 1.2; }
+  .moods button .l { font-size: .68rem; letter-spacing: .08em; color: var(--ink-faint); }
+  .moods button:hover { border-color: var(--line-strong); }
+  .moods button[aria-pressed="true"] {
+    border-color: var(--accent); background: var(--wash);
+  }
+  .moods button[aria-pressed="true"] .l { color: var(--accent); }
+
+  /* ── 花園 ──────────────────────────────────────────────── */
+  .tree-stage { position: relative; padding-top: 10px; }
+  .tree-stage canvas { display: block; width: 100%; }
+  .tree-cap {
+    text-align: center; font-size: .72rem; letter-spacing: .18em;
+    color: var(--ink-faint); margin-top: 2px;
+  }
+  .tree-cap b { color: var(--accent); font-weight: 500; font-family: var(--num); }
+
+  .month-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 12px; border-bottom: 1px solid var(--line); margin-bottom: 16px;
+  }
+  .month-nav .m {
+    font-family: var(--serif); font-size: 1.24rem; letter-spacing: .06em;
+  }
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+  .cal .wd {
+    text-align: center; font-size: .62rem; letter-spacing: .1em;
+    color: var(--ink-faint); padding-bottom: 4px;
+  }
+  .cal .cell {
+    position: relative; aspect-ratio: 1; border-radius: var(--radius);
+    border: 1px solid var(--line); background: var(--card);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1px; overflow: hidden;
+  }
+  .cal .cell::before {
+    content: ""; position: absolute; inset: 0; background: var(--accent);
+    opacity: var(--i, 0);
+  }
+  .cal .cell > * { position: relative; }
+  .cal .cell.blank { border-color: transparent; background: none; }
+  .cal .cell .dd {
+    font-family: var(--num); font-size: .6rem; color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .cal .cell .mo { font-size: 1rem; line-height: 1; }
+  .cal .cell.has { border-color: var(--line-strong); }
+  .cal .cell.today { border-color: var(--accent); border-width: 1.5px; }
+  .cal .cell.sel { box-shadow: inset 0 0 0 2px var(--accent); }
+  .cal button.cell:hover { border-color: var(--accent); }
+
+  .legend {
+    margin-top: 12px; font-size: .68rem; letter-spacing: .1em; color: var(--ink-faint);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .legend .ramp {
+    flex: none; width: 68px; height: 8px; border-radius: 20px;
+    background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 8%, transparent), var(--accent));
+    border: 1px solid var(--line);
+  }
+
+  /* 月結 */
+  .sum-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+    background: var(--line); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; margin-top: 4px;
+  }
+  .stat { background: var(--card); padding: 14px 15px; }
+  .stat .k { font-size: .66rem; letter-spacing: .18em; color: var(--ink-faint); }
+  .stat .v {
+    font-family: var(--num); font-size: 1.3rem; margin-top: 5px;
+    font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+  }
+  .stat .v.emoji { font-family: var(--sans); }
+  .stat .v small { font-size: .7rem; color: var(--ink-faint); letter-spacing: .06em; }
+
+  .bars { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
+  .bar-row { display: grid; grid-template-columns: 20px 1fr 74px; gap: 10px; align-items: center; }
+  .bar-row .cn { font-family: var(--serif); font-size: .9rem; color: var(--ink-soft); text-align: center; }
+  .bar-track { height: 7px; background: var(--wash); border-radius: 20px; overflow: hidden; }
+  /* 這是個 span，一定要 block —— inline 元素吃不到 width/height/transform */
+  .bar-fill { display: block; height: 100%; border-radius: 20px; transition: width .5s ease; }
+  .bar-row .bv {
+    font-family: var(--num); font-size: .76rem; text-align: right;
+    color: var(--ink-soft); font-variant-numeric: tabular-nums;
+  }
+
+  .recap-note {
+    font-family: var(--serif); font-size: .92rem; color: var(--ink-soft);
+    background: var(--wash); padding: 13px 15px; border-radius: var(--radius);
+    margin-top: 4px;
+  }
+
+  /* ── 底部導覽 ──────────────────────────────────────────── */
+  nav.tabs {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    background: color-mix(in oklab, var(--paper) 88%, transparent);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  nav.tabs .inner { max-width: 580px; margin: 0 auto; display: flex; }
+  nav.tabs button {
+    flex: 1; padding: 12px 0 13px; display: flex; flex-direction: column;
+    align-items: center; gap: 3px; color: var(--ink-faint);
+  }
+  nav.tabs button svg { width: 19px; height: 19px; }
+  nav.tabs button .t { font-size: .66rem; letter-spacing: .18em; }
+  nav.tabs button[aria-current="true"] { color: var(--accent); }
+
+  /* ── 備份面板 ──────────────────────────────────────────── */
+  .sheet-bg {
+    position: fixed; inset: 0; z-index: 40; background: #0a0f0c5c;
+    display: grid; align-items: end; justify-items: center;
+    animation: fade .2s ease;
+  }
+  .sheet {
+    background: var(--paper); width: 100%; max-width: 580px;
+    border-radius: 12px 12px 0 0; border: 1px solid var(--line); border-bottom: none;
+    padding: 22px var(--sp) calc(26px + env(safe-area-inset-bottom));
+    animation: rise .28s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes fade { from { opacity: 0 } }
+  @keyframes rise { from { transform: translateY(14px); opacity: .4 } }
+  @media (prefers-reduced-motion: reduce) {
+    /* delay 也要歸零，否則帶 fill-mode: both 的動畫會卡在起始狀態（長條會消失） */
+    * {
+      animation-duration: .01ms !important; animation-delay: 0s !important;
+      transition-duration: .01ms !important;
+    }
+  }
+  .sheet h2 {
+    margin: 0 0 4px; font-family: var(--serif); font-weight: 500;
+    font-size: 1.05rem; letter-spacing: .14em;
+  }
+  .sheet p { color: var(--ink-soft); font-size: .84rem; margin: 0 0 18px; }
+  .sheet .acts { display: flex; flex-direction: column; gap: 9px; }
+  .sheet .acts button, .sheet .acts label {
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 12px 15px; background: var(--card); text-align: left;
+    font-size: .9rem; cursor: pointer; display: flex; justify-content: space-between; gap: 10px;
+  }
+  .sheet .acts button:hover, .sheet .acts label:hover { border-color: var(--accent); color: var(--accent); }
+  .sheet .acts .hint { color: var(--ink-faint); font-size: .74rem; letter-spacing: .06em; }
+  .sheet .close { margin-top: 16px; width: 100%; text-align: center; color: var(--ink-faint); font-size: .84rem; padding: 8px; }
+
+  /* 存檔提示 */
+  .saved {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    bottom: calc(86px + env(safe-area-inset-bottom)); z-index: 30;
+    background: var(--accent); color: var(--paper);
+    font-size: .74rem; letter-spacing: .16em; padding: 7px 16px; border-radius: 30px;
+    opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s;
+  }
+  .saved.on { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+
+  /* ── 紙紋 ──────────────────────────────────────────────── */
+  body::after {
+    content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background-image: radial-gradient(var(--ink) .5px, transparent .55px);
+    background-size: 6px 6px; opacity: .035;
+  }
+
+  /* ── 每日一句 ─────────────────────────────────────────── */
+  .epigraph {
+    display: flex; align-items: flex-start; gap: 12px;
+    margin-top: 18px; padding-left: 14px;
+    border-left: 2px solid var(--leaf);
+  }
+  .epigraph .q { flex: 1; min-width: 0; }
+  .epigraph p {
+    margin: 0; font-family: var(--serif); font-size: .96rem; line-height: 1.75;
+    color: var(--ink); text-wrap: pretty;
+  }
+  .epigraph cite {
+    display: block; margin-top: 5px; font-style: normal;
+    font-size: .72rem; letter-spacing: .12em; color: var(--ink-faint);
+  }
+  .epigraph .swap {
+    flex: none; font-size: .68rem; letter-spacing: .1em; color: var(--ink-faint);
+    border: 1px solid var(--line); border-radius: 20px; padding: 3px 10px; margin-top: 2px;
+  }
+  .epigraph .swap:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── 常用項目 ─────────────────────────────────────────── */
+  .freq { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .freq button {
+    border: 1px solid var(--line); background: var(--card);
+    border-radius: 20px; padding: 5px 12px 5px 9px; font-size: .82rem;
+    color: var(--ink-soft); display: inline-flex; align-items: center; gap: 7px;
+  }
+  .freq button:hover { border-color: var(--accent); color: var(--accent); }
+  .freq button .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; }
+  .freq button .m {
+    font-family: var(--num); font-size: .72rem; color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .freq-hint { font-size: .78rem; color: var(--ink-faint); margin-bottom: 12px; }
+
+  /* ── 順延標籤 ─────────────────────────────────────────── */
+  .from-tag.aged { color: var(--c-food); border-color: color-mix(in oklab, var(--c-food) 40%, var(--line)); }
+  .rm.letgo {
+    font-size: .68rem; letter-spacing: .1em; border: 1px solid var(--line);
+    border-radius: 20px; padding: 2px 9px; color: var(--ink-faint); margin-top: 2px;
+  }
+  .rm.letgo:hover { border-color: var(--c-food); color: var(--c-food); }
+
+  /* ── 運動 ─────────────────────────────────────────────── */
+  .ex-pick { display: flex; gap: 7px; flex-wrap: wrap; }
+  .ex-pick button {
+    border: 1px solid var(--line); background: var(--card); border-radius: 20px;
+    padding: 7px 15px; font-size: .86rem; color: var(--ink-soft);
+  }
+  .ex-pick button:hover { border-color: var(--line-strong); }
+  .ex-pick button[aria-pressed="true"] {
+    border-color: var(--accent); color: var(--accent); background: var(--wash);
+  }
+  .ex-pick button[aria-pressed="true"][data-ex="none"] {
+    border-color: var(--line-strong); color: var(--ink-faint); background: none;
+  }
+  .ex-min {
+    display: flex; align-items: center; gap: 10px; margin-top: 13px;
+    font-size: .8rem; color: var(--ink-soft);
+  }
+  .ex-min input {
+    width: 92px; font-family: var(--num); font-variant-numeric: tabular-nums;
+  }
+
+  /* 月曆上的運動標記 */
+  .cal .cell .exdot {
+    position: absolute; top: 4px; right: 4px; width: 5px; height: 5px;
+    border-radius: 50%; background: var(--leaf);
+  }
+
+  /* ── 月比較 ───────────────────────────────────────────── */
+  .delta {
+    display: block; margin-top: 3px; font-family: var(--sans);
+    font-size: .68rem; letter-spacing: .08em;
+  }
+  .delta.up { color: var(--c-food); }
+  .delta.down { color: var(--accent); }
+  .delta.flat { color: var(--ink-faint); }
+  .sum-grid { grid-template-columns: repeat(2, 1fr); }
+
+  @media (min-width: 520px) {
+    .exp-add { flex-direction: row; align-items: center; flex-wrap: wrap; }
+    .exp-add .field.item { flex: 1 1 180px; }
+    .exp-add .line2 { flex: 1 1 220px; }
+    .moods { grid-template-columns: repeat(8, 1fr); }
+    .moods button .l { font-size: .62rem; }
+  }
+</style>
+
+<div class="season-band"></div>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>今日草木</h1>
+      <div class="season-tag">
+        <span id="seasonName">夏</span>
+        <button class="icon-btn" id="btnMode" aria-label="切換淺深底色"></button>
+        <button class="icon-btn" id="btnSheet" aria-label="備份與資料">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+            <path d="M4 7h16M4 12h16M4 17h10" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="view"></main>
+</div>
+
+<nav class="tabs">
+  <div class="inner">
+    <button data-tab="today" aria-current="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 21c0-6 3-10 8-12-1 7-4 10-8 12z" /><path d="M12 21c0-5-2.5-8.5-7-10 .8 6 3.5 8.5 7 10z" /><path d="M12 21v-5" />
+      </svg>
+      <span class="t">今天</span>
+    </button>
+    <button data-tab="garden">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M3.5 10h17M8 3.5v3M16 3.5v3" />
+      </svg>
+      <span class="t">花園</span>
+    </button>
+  </div>
+</nav>
+
+<div class="saved" id="savedTip">已收好</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ── 常數 ────────────────────────────────────────────── */
+  var KEY = "jincao-journal-v1";
+  var CATS = [
+    { c: "食", k: "food",  n: "飲食" },
+    { c: "行", k: "move",  n: "交通" },
+    { c: "居", k: "home",  n: "居家" },
+    { c: "玩", k: "play",  n: "娛樂" },
+    { c: "健", k: "well",  n: "健康" },
+    { c: "學", k: "learn", n: "學習" },
+    { c: "他", k: "etc",   n: "其他" }
+  ];
+  var MOODS = [
+    { e: "☀️", l: "晴朗" }, { e: "🌤", l: "還不錯" }, { e: "⛅", l: "平常" }, { e: "🌙", l: "平靜" },
+    { e: "🌫", l: "有點悶" }, { e: "🌧", l: "低落" }, { e: "⛈", l: "煩躁" }, { e: "🌈", l: "驚喜" }
+  ];
+  var PROMPTS = [
+    "今天有什麼讓你停下來多看一眼？",
+    "今天最像自己的一個瞬間是什麼？",
+    "身體今天想告訴你什麼？",
+    "今天誰的一句話留在你心裡？",
+    "有什麼原本以為會很難、結果還好？",
+    "今天有哪一刻是安靜的？",
+    "如果今天有味道或聲音，是什麼？",
+    "今天為誰、或為什麼事花了心力？",
+    "有什麼今天決定不再撐了？",
+    "今天想謝謝什麼？"
+  ];
+  var EX = [
+    { k: "none",    n: "沒動" },
+    { k: "walk",    n: "散步" },
+    { k: "cardio",  n: "有氧" },
+    { k: "lift",    n: "重訓" },
+    { k: "stretch", n: "伸展" }
+  ];
+  /* 每日一句：想換成自己的收藏，直接改這個陣列即可（a 留空就不顯示出處） */
+  var QUOTES = [
+    { t: "第一步是你必須說：「我辦得到」。", a: "威爾·史密斯" },
+    { t: "千里之行，始於足下。", a: "老子" },
+    { t: "天下難事，必作於易；天下大事，必作於細。", a: "老子" },
+    { t: "勝人者有力，自勝者強。", a: "老子" },
+    { t: "知人者智，自知者明。", a: "老子" },
+    { t: "知足者富。", a: "老子" },
+    { t: "知者不惑，仁者不憂，勇者不懼。", a: "論語" },
+    { t: "不遷怒，不貳過。", a: "論語" },
+    { t: "凡事豫則立，不豫則廢。", a: "禮記·中庸" },
+    { t: "不積小流，無以成江海。", a: "荀子·勸學" },
+    { t: "其進銳者，其退速。", a: "孟子" },
+    { t: "行百里者半於九十。", a: "戰國策" },
+    { t: "人生天地之間，若白駒之過隙，忽然而已。", a: "莊子" },
+    { t: "安時而處順。", a: "莊子" },
+    { t: "不以物喜，不以己悲。", a: "范仲淹〈岳陽樓記〉" },
+    { t: "盛年不重來，一日難再晨。及時當勉勵，歲月不待人。", a: "陶淵明" },
+    { t: "莫等閒，白了少年頭，空悲切。", a: "岳飛〈滿江紅〉" },
+    { t: "一花一世界，一葉一如來。", a: "華嚴經" },
+    { t: "日日是好日。", a: "禪語" },
+    { t: "吃飯時吃飯，睡覺時睡覺。", a: "禪語" },
+    { t: "你的時間有限，不要浪費在活出別人的人生。", a: "史蒂夫·賈伯斯" },
+    { t: "行動不一定帶來快樂，但沒有行動就肯定沒有快樂。", a: "班傑明·迪斯雷利" },
+    { t: "船停在港裡最安全，但那不是造船的目的。", a: "約翰·薛德" },
+    { t: "我們反覆做的事造就了我們。", a: "威爾·杜蘭（詮釋亞里斯多德）" },
+    { t: "我沒有失敗，我只是找到了一萬種行不通的方法。", a: "愛迪生" },
+    { t: "凡是過去，皆為序章。", a: "莎士比亞〈暴風雨〉" },
+    { t: "生命中真正重要的不是你遭遇了什麼，而是你記住了哪些事，又是如何銘記的。", a: "馬奎斯" },
+    { t: "暴風雨結束後，你不會記得自己是怎麼撐過來的；而你已經不是原來的那個人了。", a: "村上春樹〈海邊的卡夫卡〉" },
+    { t: "種一棵樹最好的時間是二十年前，其次是現在。", a: "諺語" },
+    { t: "與其詛咒黑暗，不如點亮一支蠟燭。", a: "諺語" },
+    { t: "山不轉路轉，路不轉人轉。", a: "諺語" },
+    { t: "慢慢來，比較快。", a: "諺語" },
+    { t: "今日事，今日畢。", a: "諺語" },
+    { t: "困難的那條路，從來不擁擠。", a: "諺語" },
+    { t: "早起的鳥兒有蟲吃，早起的蟲兒被鳥吃。", a: "諺語" },
+    { t: "先處理心情，再處理事情。", a: "" },
+    { t: "休息不是浪費時間，是讓下一步走得穩一點。", a: "" },
+    { t: "今天做不到的事，不代表明天也做不到；今天做到的事，也不必明天再證明一次。", a: "" },
+    { t: "把標準降到「今天有做」就好，剩下的交給次數。", a: "" },
+
+    /* 以下引自 vocus.cc/article/665d25b5fd897800012df2ad，與上面重複的已去掉 */
+    { t: "人生就像騎單車，要保持平衡，就必須一直向前。", a: "愛因斯坦" },
+    { t: "二十年後，你會因為沒做的事而比做過的事更後悔。", a: "馬克·吐溫" },
+    { t: "我不能改變風向，但我能調整帆的方向。", a: "吉米·迪恩" },
+    { t: "天才是百分之一的靈感，加上百分之九十九的汗水。", a: "愛迪生" },
+    { t: "無論你認為自己行還是不行，你都是對的。", a: "亨利·福特" },
+    { t: "成功就是從失敗到失敗，也依然不改熱情。", a: "丘吉爾" },
+    { t: "我們應該有毅力，尤其要有信心。", a: "瑪麗·居里" },
+    { t: "行動是成功的基礎，沒有行動，一切都是空談。", a: "洛克菲勒" },
+    { t: "接受自己的極限，我們才能超越自己。", a: "愛因斯坦" },
+    { t: "效率是做好事情，效能是做對的事情。", a: "彼得·杜拉克" },
+    { t: "完成工作的方法，是愛惜每一分鐘。", a: "達爾文" },
+    { t: "即使我們走得再慢，也比站在原地更接近目標。", a: "宮崎駿" },
+    { t: "我寧願跟那種做事很糟糕、但願意付出 110% 的人合作，也不願意跟只付出 60% 就覺得自己做得很好的人在一起。", a: "威爾·史密斯" },
+    { t: "機會是留給有準備的人的。", a: "巴斯德" },
+    { t: "勞工若覺得自己在做有意義的工作，則製作的產品必定精良。", a: "皮哈爾·吉林哈默" },
+    { t: "有良知的人不會苛求完美，而是在發現錯誤後厲行改正。", a: "佐久間象山" },
+    { t: "我們都生活在陰溝裡，但仍有些人仰望星空。", a: "奧斯卡·王爾德" },
+    { t: "做你自己，其他角色都已有人在演。", a: "奧斯卡·王爾德" },
+    { t: "你可能會遇到許多失敗，但你絕不能被擊倒。", a: "海明威" },
+    { t: "當一扇幸福之門關閉時，另一扇就會打開。", a: "海倫凱勒" },
+    { t: "面對陽光你就不會看到陰影。", a: "海倫凱勒" },
+    { t: "我們必須接受失望，因為它是有限的；但絕不可失去希望，因為它是無限的。", a: "馬丁·路德·金" },
+    { t: "世間最珍貴的不是「得不到」和「已失去」，而是現在能把握的幸福。", a: "" },
+    { t: "積極的態度會帶來積極的結果，因為態度是具有感染力的。", a: "吉格·金克拉" },
+    { t: "我們無法讓壞事不發生，卻能努力讓它不影響我們。", a: "珍妮佛·雪拉德·勞倫斯" },
+    { t: "萬事萬物皆有裂痕，光就是這樣照進來的。", a: "李歐納·柯恩" },
+    { t: "生活就是當我們忙著做其他計劃時，所發生的事情。", a: "約翰·藍儂" },
+    { t: "知之者不如好之者，好之者不如樂之者。", a: "論語" },
+    { t: "天將降大任於斯人也，必先苦其心志，勞其筋骨。", a: "孟子" },
+    { t: "智慧的開始，是對無知的承認。", a: "蘇格拉底" },
+    { t: "唯有那些異想天開的人，才能完成不可能的事。", a: "愛因斯坦" },
+    { t: "成功＝艱苦勞動＋正確方法＋少說空話。", a: "愛因斯坦" },
+    { t: "過生活只有兩種方式：一種是視一切為奇蹟，另一種是視一切為平常。", a: "愛因斯坦" },
+    { t: "人人都想改變世界，卻沒有人想先從改變自己開始。", a: "托爾斯泰" },
+    { t: "人生的價值，並不是用時間，而是用深度去衡量的。", a: "托爾斯泰" },
+    { t: "物競天擇，適者生存。", a: "達爾文" },
+    { t: "不經巨大的困難，不會有偉大的事業。", a: "伏爾泰" },
+    { t: "世界上只有一種英雄主義，那就是在認清生活真相後依然熱愛生活。", a: "羅曼·羅蘭" },
+    { t: "人不是因為沒有信念而失敗，而是因為不能把信念化成行動，並且堅持到底。", a: "卡耐基" },
+    { t: "有兩種過錯是基本的，其他一切過錯都由此而生：急躁和懶惰。", a: "卡夫卡" },
+    { t: "不要因為怕辛苦，就拒絕一個想法、夢想或目標，成功通常伴隨著辛苦。", a: "包柏·普克特" },
+    { t: "我一個人無法改變世界，但我可以投擲石頭於水中，激起延綿漣漪。", a: "德蕾莎修女" },
+    { t: "自信是成功的第一秘訣。", a: "愛默生" },
+    { t: "苦難是最好的老師，教導我們了解自己的內心；雖然受到磨練與心碎，但我相信會讓自己變成更好的狀態。", a: "狄更斯" },
+    { t: "不讀書的人，思想就會停止。", a: "狄德羅" },
+    { t: "生活中不是缺少美，而是缺少發現美的眼睛。", a: "羅丹" },
+    { t: "你若要為你的意義而歡喜，就必須給這個世界以意義。", a: "歌德" },
+    { t: "勇敢不是沒有恐懼，而是帶著恐懼依然前行。", a: "丘吉爾" },
+    { t: "我們靠取得維持生計，但靠著付出書寫生命。", a: "丘吉爾" },
+    { t: "成功不是終點，失敗也不是終結，最重要的是繼續前進的勇氣。", a: "丘吉爾" },
+    { t: "那些未曾殺死我的，使我變得更強大。", a: "尼采" },
+    { t: "如果你能夢想到它，你就能做到它。", a: "華特·迪士尼" },
+    { t: "夢想可以改變現實，只要你有勇氣去追求。", a: "華特·迪士尼" },
+    { t: "哲學家們只是用不同的方式解釋世界，問題在於改變世界。", a: "馬克思" },
+    { t: "我來了，我看見，我征服。", a: "凱撒" },
+    { t: "走自己的路，讓別人去說吧。", a: "但丁" },
+    { t: "要成功，必須先相信自己可以成功。", a: "瑞妮·布朗" },
+    { t: "你必須成為你希望在世界上看到的改變。", a: "甘地" },
+    { t: "最大的榮譽不在於從不跌倒，而在於每次跌倒後都能站起來。", a: "納爾遜·曼德拉" },
+    { t: "人類所面臨的困難，並不是為了使我們灰心喪氣，而是為了激發我們的勇氣和智慧。", a: "居里夫人" },
+    { t: "一個人若不留意自己已有的成就，他就只會看見自己的不足之處。", a: "居里夫人" },
+    { t: "我走得很慢，但我從不後退。", a: "林肯" },
+    { t: "一個人能使自己成為自己，比什麼都重要。", a: "吳爾芙" },
+    { t: "生命的價值不在於時間的長短，而在於你如何使用它。", a: "蒙田" },
+    { t: "我們唯一該害怕的，就是恐懼本身。", a: "羅斯福" },
+    { t: "我選擇了人跡罕至的路，這使得一切都截然不同。", a: "羅伯特·佛洛斯特" },
+    { t: "我並不喜歡冒險，但為了往上爬，我願意賭一賭 —— 我指的是為後世鋪路。", a: "亞歷山大·漢密爾頓" },
+    { t: "我想在宇宙中製造點聲音。", a: "史蒂夫·賈伯斯" },
+    { t: "我們總是高估未來兩年的變化，而低估未來十年的變化。", a: "比爾·蓋茲" },
+    { t: "如果你感覺一切都在掌控之中，那麼你就不夠快。", a: "馬里奧·安德烈蒂" },
+    { t: "不管多麼困難，這個世界仍是美好的。", a: "安妮·法蘭克" },
+    { t: "如果一件事情很重要，就算機會不站在你這邊，你也要去做。", a: "伊隆·馬斯克" },
+    { t: "失敗是常事，如果沒有經歷失敗，表示你還不夠創新。", a: "伊隆·馬斯克" },
+    { t: "我與我周旋久，寧作我。", a: "世說新語" }
+  ];
+  var WD = ["日", "一", "二", "三", "四", "五", "六"];
+  var GLYPH = {
+    coin: '<circle cx="12" cy="12" r="8"/><path d="M12 8v8M9.5 10.5h5M9.5 13.5h5"/>',
+    tick: '<path d="M4 13l5 5L20 6"/>',
+    drop: '<path d="M12 3.5c3.5 4.5 5.5 7 5.5 9.5a5.5 5.5 0 1 1-11 0C6.5 10.5 8.5 8 12 3.5z"/>',
+    run: '<path d="M4 19.5c4.5 0 3.2-5.5 7.5-5.5s3.2-5.5 7.5-5.5"/><circle cx="19" cy="8.5" r="1.7"/>',
+    sprout: '<path d="M12 21v-8"/><path d="M12 13c0-3.5 2.5-6 6-6 0 3.5-2.5 6-6 6z"/><path d="M12 15c0-2.8-2-5-5-5 0 2.8 2 5 5 5z"/>',
+    sun: '<circle cx="12" cy="12" r="4.2"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/>'
+  };
+
+  /* ── 資料 ────────────────────────────────────────────── */
+  var MODE_KEY = "jincao-mode";
+  var store = load();
+  var state = {
+    tab: "today", date: today(), month: today().slice(0, 7), newCat: "food",
+    /* "" = 跟隨系統／Claude 頁面的深淺 */
+    mode: pref(MODE_KEY, "", ["light", "dark"])
+  };
+  function pref(key, def, allow) {
+    try {
+      var v = localStorage.getItem(key);
+      return v && allow.indexOf(v) >= 0 ? v : def;
+    } catch (e) { return def; }
+  }
+  var saveTimer = null, tipTimer = null;
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+  function save(quiet) {
+    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) { return; }
+    if (quiet) return;
+    clearTimeout(tipTimer);
+    var tip = document.getElementById("savedTip");
+    tip.classList.add("on");
+    tipTimer = setTimeout(function () { tip.classList.remove("on"); }, 1100);
+  }
+  function saveSoon() { clearTimeout(saveTimer); saveTimer = setTimeout(function () { save(); }, 700); }
+
+  /* ── 日期工具 ─────────────────────────────────────────── */
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function fmt(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function today() { return fmt(new Date()); }
+  function toDate(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function shift(s, n) { var d = toDate(s); d.setDate(d.getDate() + n); return fmt(d); }
+  function seasonOf(s) {
+    var m = +s.slice(5, 7);
+    if (m >= 3 && m <= 5) return { k: "spring", n: "春" };
+    if (m >= 6 && m <= 8) return { k: "summer", n: "夏" };
+    if (m >= 9 && m <= 11) return { k: "autumn", n: "秋" };
+    return { k: "winter", n: "冬" };
+  }
+
+  /* ── entry ───────────────────────────────────────────── */
+  function entry(date, create) {
+    var e = store[date];
+    if (!e && create) {
+      e = store[date] = { expenses: [], done: [], feel: "", tomorrow: [], mood: "", ex: { kind: "", min: 0 } };
+    }
+    if (e && !e.ex) e.ex = { kind: "", min: 0 };
+    /* 舊資料的 from 欄位轉成 age */
+    if (e && e.done) e.done.forEach(function (t) { if (t.from && !t.age) t.age = t.from; });
+    return e || null;
+  }
+  function has(e) {
+    return !!e && !!((e.expenses && e.expenses.length) || (e.done && e.done.length) ||
+      (e.feel && e.feel.trim()) || (e.tomorrow && e.tomorrow.length) || e.mood ||
+      (e.ex && e.ex.kind));
+  }
+  function moved(e) { return !!(e && e.ex && e.ex.kind && e.ex.kind !== "none"); }
+  function uid() { return Math.random().toString(36).slice(2, 9); }
+
+  /* 昨天的「明天想做」＋昨天沒做完的，一起流進今天的「今日完成」。
+     age = 已經跟著走幾天；打勾或按「放下」就不再跟。 */
+  function carry(date) {
+    var e = entry(date, true);
+    if (e.carried) return;
+    var p = store[shift(date, -1)];
+    if (!p) return;
+
+    var pool = [];
+    (p.tomorrow || []).forEach(function (t) {
+      if (t.text && t.text.trim()) pool.push({ text: t.text.trim(), age: 1 });
+    });
+    (p.done || []).forEach(function (t) {
+      if (!t.checked && t.text && t.text.trim()) {
+        pool.push({ text: t.text.trim(), age: (t.age || 0) + 1 });
+      }
+    });
+
+    /* 同一件事同時出現在兩邊時，取跟得比較久的那個天數 */
+    pool.sort(function (a, b) { return b.age - a.age; });
+
+    var seen = {}, added = 0;
+    (e.done || []).forEach(function (t) { seen[t.text.trim()] = true; });
+    pool.forEach(function (c) {
+      var k = c.text;
+      if (seen[k]) return;
+      seen[k] = true;
+      e.done.push({ id: uid(), text: c.text, checked: false, age: c.age });
+      added++;
+    });
+
+    if (added || has(p)) { e.carried = true; save(true); }
+  }
+  function ageTag(n) {
+    if (!n) return "";
+    if (n === 1) return "昨天想做";
+    return "順延 " + n + " 天";
+  }
+  function streak() {
+    var n = 0, d = today();
+    if (!has(store[d])) d = shift(d, -1);
+    while (has(store[d])) { n++; d = shift(d, -1); }
+    return n;
+  }
+  function recordedDays() {
+    var n = 0;
+    for (var k in store) if (has(store[k])) n++;
+    return n;
+  }
+  function dayTotal(e) {
+    if (!e || !e.expenses) return 0;
+    return e.expenses.reduce(function (s, x) { return s + (+x.amount || 0); }, 0);
+  }
+  function monthTotal(ym) {
+    var t = 0;
+    for (var k in store) if (k.slice(0, 7) === ym) t += dayTotal(store[k]);
+    return t;
+  }
+  function money(n) { return n.toLocaleString("zh-TW", { maximumFractionDigits: 0 }); }
+
+  /* ── 繪製：今天 ───────────────────────────────────────── */
+  var view = document.getElementById("view");
+
+  function label(g, text, extra) {
+    return '<div class="blabel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' + GLYPH[g] + '</svg>' +
+      '<span>' + text + '</span><i class="tail"></i>' +
+      (extra ? '<b class="amt">' + extra + "</b>" : "") + "</div>";
+  }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function renderToday() {
+    var date = state.date;
+    carry(date);
+    var e = entry(date, true);
+    var d = toDate(date);
+    var ss = seasonOf(date);
+    var isToday = date === today();
+    var lastYear = store[(+date.slice(0, 4) - 1) + date.slice(4)];
+    var pIdx = Math.floor(toDate(date).getTime() / 86400000) % PROMPTS.length;
+
+    var h = "";
+    h += '<div class="datehead">' +
+      '<div class="d-main">' +
+        '<span class="d-num">' + (d.getMonth() + 1) + "月" + d.getDate() + "日</span>" +
+        '<span class="d-sub"><span>' + d.getFullYear() + " ・ 星期" + WD[d.getDay()] + "</span>" +
+        (isToday ? '<span class="streak">連續記錄 ' + streak() + " 天</span>" : "") +
+      "</span></div>" +
+      '<div class="nav-day">' +
+        '<button data-go="-1" aria-label="前一天">‹</button>' +
+        '<button data-go="1" aria-label="後一天"' + (isToday ? " disabled" : "") + ">›</button>" +
+      "</div></div>";
+
+    /* 每日一句 */
+    var qBase = Math.floor(toDate(date).getTime() / 86400000);
+    var q = QUOTES[((qBase + (e.qi || 0)) % QUOTES.length + QUOTES.length) % QUOTES.length];
+    h += '<div class="epigraph"><div class="q"><p>' + esc(q.t) + "</p>" +
+      (q.a ? "<cite>— " + esc(q.a) + "</cite>" : "") + "</div>" +
+      '<button class="swap" id="qSwap" aria-label="換一句">另一句</button></div>';
+
+    if (lastYear && (lastYear.feel || "").trim()) {
+      h += '<div class="memory-line"><b>去年今天</b>　' +
+        esc(lastYear.feel.trim().slice(0, 68)) + (lastYear.feel.trim().length > 68 ? "…" : "") +
+        (lastYear.mood ? "　" + lastYear.mood : "") + "</div>";
+    }
+
+    /* 記帳 */
+    h += '<section class="block">' +
+      label("coin", "今日記帳", "本月 " + money(monthTotal(date.slice(0, 7))));
+    h += '<div id="freqBox"></div>';
+    h += '<div id="expList"></div>';
+    h += '<div class="exp-add">' +
+      '<input class="field item" id="expItem" placeholder="花在什麼上" maxlength="40" />' +
+      '<div class="line2">' +
+        '<input class="field money" id="expAmt" placeholder="金額" inputmode="decimal" />' +
+        '<button class="btn-add" id="expAdd">記下</button>' +
+      "</div>" +
+      '<div class="cats" id="catPick" role="group" aria-label="分類"></div>' +
+      "</div></section>";
+
+    /* 完成 */
+    h += '<section class="block">' + label("tick", "今日完成") +
+      '<ul class="list" id="doneList"></ul>' +
+      '<div class="add-inline"><input class="field" id="doneItem" placeholder="做完了什麼" maxlength="80" />' +
+      '<button class="btn-add" id="doneAdd">加入</button></div></section>';
+
+    /* 運動 */
+    h += '<section class="block">' + label("run", "今天有動嗎") +
+      '<div class="ex-pick" id="exPick" role="group" aria-label="今天的運動"></div>' +
+      '<div id="exMin"></div></section>';
+
+    /* 感受 */
+    h += '<section class="block">' + label("drop", "今天感受到") +
+      '<div class="prompt">' + PROMPTS[pIdx] + "</div>" +
+      '<textarea class="field feel" id="feel" placeholder="寫幾句就好">' + esc(e.feel) + "</textarea></section>";
+
+    /* 明天 */
+    h += '<section class="block">' + label("sprout", "明天想做") +
+      '<ul class="list" id="tmrList"></ul>' +
+      '<div class="add-inline"><input class="field" id="tmrItem" placeholder="明天要做的一件事" maxlength="80" />' +
+      '<button class="btn-add" id="tmrAdd">種下</button></div>' +
+      '<div class="empty">明天打開時，這些會自動長到「今日完成」。</div></section>';
+
+    /* 心情 */
+    h += '<section class="block">' + label("sun", "今日心情") +
+      '<div class="moods" id="moods" role="group" aria-label="今日心情"></div></section>';
+
+    view.innerHTML = h;
+
+    document.documentElement.setAttribute("data-season", ss.k);
+    document.getElementById("seasonName").textContent = ss.n;
+
+    /* 綁定 */
+    view.querySelectorAll("[data-go]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.date = shift(state.date, +b.dataset.go);
+        if (state.date > today()) state.date = today();
+        render();
+      });
+    });
+
+    document.getElementById("qSwap").addEventListener("click", function () {
+      e.qi = (e.qi || 0) + 1;
+      save(true); renderToday();
+    });
+
+    renderCats();
+    renderFreq();
+    renderExp();
+    renderList("done");
+    renderList("tmr");
+    renderEx();
+    renderMoods();
+
+    var item = document.getElementById("expItem"), amt = document.getElementById("expAmt");
+    function addExp() {
+      var v = parseFloat(amt.value);
+      if (!item.value.trim() && !(v > 0)) return;
+      e.expenses.push({ id: uid(), item: item.value.trim() || "未命名", amount: v > 0 ? v : 0, cat: state.newCat });
+      item.value = ""; amt.value = "";
+      save(); renderExp(); renderFreq(); updateMonthAmt();
+      item.focus();
+    }
+    document.getElementById("expAdd").addEventListener("click", addExp);
+    [item, amt].forEach(function (el) {
+      el.addEventListener("keydown", function (ev) { if (ev.key === "Enter") addExp(); });
+    });
+
+    bindAdd("done", "做完了什麼");
+    bindAdd("tmr", "明天要做的一件事");
+
+    var fe = document.getElementById("feel");
+    fe.addEventListener("input", function () { e.feel = fe.value; saveSoon(); });
+  }
+
+  function updateMonthAmt() {
+    var el = view.querySelector(".block .amt");
+    if (el) el.textContent = "本月 " + money(monthTotal(state.date.slice(0, 7)));
+  }
+
+  function renderCats() {
+    var box = document.getElementById("catPick");
+    box.innerHTML = CATS.map(function (c) {
+      var on = c.k === state.newCat;
+      return '<button data-cat="' + c.k + '" aria-pressed="' + on + '" title="' + c.n + '"' +
+        (on ? ' style="background:var(--c-' + c.k + ')"' : "") + ">" + c.c + "</button>";
+    }).join("");
+    box.querySelectorAll("[data-cat]").forEach(function (b) {
+      b.addEventListener("click", function () { state.newCat = b.dataset.cat; renderCats(); });
+    });
+  }
+
+  /* 常用項目：從過去記錄自動統計，最常記的排前面 */
+  function frequentItems(limit) {
+    var map = {};
+    for (var k in store) {
+      var ex = (store[k] || {}).expenses || [];
+      for (var i = 0; i < ex.length; i++) {
+        var x = ex[i], nm = (x.item || "").trim();
+        if (!nm || nm === "未命名") continue;
+        var key = nm + " " + x.cat;
+        if (!map[key]) map[key] = { item: nm, cat: x.cat, n: 0, last: "", amount: 0 };
+        map[key].n++;
+        if (k >= map[key].last) { map[key].last = k; map[key].amount = +x.amount || 0; }
+      }
+    }
+    return Object.keys(map).map(function (key) { return map[key]; })
+      .sort(function (a, b) { return b.n - a.n || (a.last < b.last ? 1 : -1); })
+      .slice(0, limit || 6);
+  }
+  function renderFreq() {
+    var box = document.getElementById("freqBox");
+    if (!box) return;
+    var list = frequentItems(6);
+    if (!list.length) {
+      box.innerHTML = '<div class="freq-hint">記過幾次之後，常用項目會自己出現在這裡。</div>';
+      return;
+    }
+    box.innerHTML = '<div class="freq">' + list.map(function (f, i) {
+      return '<button data-freq="' + i + '"><span class="dot" style="background:var(--c-' + f.cat + ')"></span>' +
+        esc(f.item) + '<span class="m">' + money(f.amount) + "</span></button>";
+    }).join("") + "</div>";
+    box.querySelectorAll("[data-freq]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var f = list[+b.dataset.freq];
+        document.getElementById("expItem").value = f.item;
+        document.getElementById("expAmt").value = f.amount || "";
+        state.newCat = f.cat;
+        renderCats();
+        document.getElementById("expAmt").focus();
+        document.getElementById("expAmt").select();
+      });
+    });
+  }
+
+  /* 今天有動嗎 */
+  function renderEx() {
+    var e = entry(state.date, true);
+    var pick = document.getElementById("exPick");
+    if (!pick) return;
+    pick.innerHTML = EX.map(function (x) {
+      return '<button data-ex="' + x.k + '" aria-pressed="' + (e.ex.kind === x.k) + '">' + x.n + "</button>";
+    }).join("");
+    pick.querySelectorAll("[data-ex]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var k = b.dataset.ex;
+        e.ex.kind = e.ex.kind === k ? "" : k;
+        if (e.ex.kind === "none" || !e.ex.kind) e.ex.min = 0;
+        save(); renderEx();
+      });
+    });
+
+    var box = document.getElementById("exMin");
+    if (!e.ex.kind || e.ex.kind === "none") { box.innerHTML = ""; return; }
+    box.innerHTML = '<div class="ex-min"><label for="exMinIn">動了多久</label>' +
+      '<input class="field" id="exMinIn" inputmode="numeric" placeholder="分鐘" value="' +
+      (e.ex.min || "") + '" /><span>分鐘</span></div>';
+    var inp = document.getElementById("exMinIn");
+    inp.addEventListener("input", function () {
+      var v = parseInt(inp.value, 10);
+      e.ex.min = v > 0 ? v : 0;
+      saveSoon();
+    });
+  }
+
+  function renderExp() {
+    var e = entry(state.date, true);
+    var box = document.getElementById("expList");
+    if (!box) return;
+    if (!e.expenses.length) {
+      box.innerHTML = '<div class="empty">今天還沒有記錄。</div>';
+      return;
+    }
+    box.innerHTML = e.expenses.map(function (x) {
+      var c = CATS.filter(function (k) { return k.k === x.cat; })[0] || CATS[6];
+      return '<div class="exp-row"><span class="nm">' + esc(x.item) + "</span>" +
+        '<span class="meta"><span class="cat" style="background:var(--c-' + c.k + ')" title="' + c.n + '">' + c.c + "</span>" +
+        '<span class="val">' + money(+x.amount || 0) + "</span></span>" +
+        '<button class="del" data-del="' + x.id + '" aria-label="刪除 ' + esc(x.item) + '">×</button></div>';
+    }).join("") +
+      '<div class="exp-row" style="border-bottom:none;padding-top:12px">' +
+      '<span class="nm" style="font-size:.72rem;letter-spacing:.18em;color:var(--ink-soft)">今日小計</span>' +
+      '<span class="meta"><span class="val" style="font-size:1.05rem;color:var(--accent)">' +
+      money(dayTotal(e)) + "</span></span><span></span></div>";
+
+    box.querySelectorAll("[data-del]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        e.expenses = e.expenses.filter(function (x) { return x.id !== b.dataset.del; });
+        save(); renderExp(); updateMonthAmt();
+      });
+    });
+  }
+
+  function listOf(kind) {
+    var e = entry(state.date, true);
+    return kind === "done" ? e.done : e.tomorrow;
+  }
+  function renderList(kind) {
+    var arr = listOf(kind);
+    var box = document.getElementById(kind === "done" ? "doneList" : "tmrList");
+    if (!box) return;
+    if (!arr.length) {
+      box.innerHTML = '<li style="border:none;color:var(--ink-faint);font-size:.84rem;padding:2px 0">' +
+        (kind === "done" ? "還空著 — 完成一件就記一件。" : "還沒種下任何事。") + "</li>";
+      return;
+    }
+    box.innerHTML = arr.map(function (t) {
+      var ck = kind === "done" && t.checked;
+      return "<li" + (ck ? ' class="done"' : "") + ">" +
+        (kind === "done"
+          ? '<button class="tick" data-ck="' + t.id + '" aria-pressed="' + !!t.checked + '" aria-label="切換完成">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13l5 5L20 6"/></svg></button>'
+          : '<span class="tick" style="border-style:dashed" aria-hidden="true"></span>') +
+        '<span class="txt">' + esc(t.text) +
+        (kind === "done" && t.age && !t.checked
+          ? '<span class="from-tag' + (t.age >= 3 ? " aged" : "") + '">' + ageTag(t.age) + "</span>"
+          : "") + "</span>" +
+        (kind === "done" && t.age >= 5 && !t.checked
+          ? '<button class="rm letgo" data-rm="' + t.id + '">放下</button>'
+          : '<button class="rm" data-rm="' + t.id + '" aria-label="移除">×</button>') + "</li>";
+    }).join("");
+
+    box.querySelectorAll("[data-ck]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var t = arr.filter(function (x) { return x.id === b.dataset.ck; })[0];
+        if (t) { t.checked = !t.checked; save(); renderList(kind); }
+      });
+    });
+    box.querySelectorAll("[data-rm]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var e = entry(state.date, true);
+        if (kind === "done") e.done = arr.filter(function (x) { return x.id !== b.dataset.rm; });
+        else e.tomorrow = arr.filter(function (x) { return x.id !== b.dataset.rm; });
+        save(); renderList(kind);
+      });
+    });
+  }
+  function bindAdd(kind) {
+    var inp = document.getElementById(kind === "done" ? "doneItem" : "tmrItem");
+    var btn = document.getElementById(kind === "done" ? "doneAdd" : "tmrAdd");
+    function add() {
+      var v = inp.value.trim();
+      if (!v) return;
+      var e = entry(state.date, true);
+      var obj = { id: uid(), text: v };
+      if (kind === "done") { obj.checked = true; e.done.push(obj); }
+      else e.tomorrow.push(obj);
+      inp.value = "";
+      save(); renderList(kind); inp.focus();
+    }
+    btn.addEventListener("click", add);
+    inp.addEventListener("keydown", function (ev) { if (ev.key === "Enter") add(); });
+  }
+
+  function renderMoods() {
+    var e = entry(state.date, true);
+    var box = document.getElementById("moods");
+    box.innerHTML = MOODS.map(function (m) {
+      return '<button data-mood="' + m.e + '" aria-pressed="' + (e.mood === m.e) + '">' +
+        '<span class="e">' + m.e + '</span><span class="l">' + m.l + "</span></button>";
+    }).join("");
+    box.querySelectorAll("[data-mood]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        e.mood = e.mood === b.dataset.mood ? "" : b.dataset.mood;
+        save(); renderMoods();
+      });
+    });
+  }
+
+  /* ── 繪製：花園 ───────────────────────────────────────── */
+  function renderGarden() {
+    var ym = state.month;
+    var y = +ym.slice(0, 4), m = +ym.slice(5, 7);
+    var first = new Date(y, m - 1, 1);
+    var days = new Date(y, m, 0).getDate();
+    var ss = seasonOf(ym + "-01");
+
+    /* 當月最高單日花費，用來決定格子底色濃度 */
+    var maxSpend = 0, spend = {}, moodCount = {}, doneAll = 0, doneOk = 0, recorded = 0, total = 0;
+    var exDays = 0, exMin = 0;
+    for (var i = 1; i <= days; i++) {
+      var ds = ym + "-" + pad(i), en = store[ds];
+      if (!has(en)) continue;
+      recorded++;
+      var t = dayTotal(en); spend[ds] = t; total += t;
+      if (t > maxSpend) maxSpend = t;
+      if (en.mood) moodCount[en.mood] = (moodCount[en.mood] || 0) + 1;
+      if (moved(en)) { exDays++; exMin += (en.ex.min || 0); }
+      (en.done || []).forEach(function (x) { doneAll++; if (x.checked) doneOk++; });
+    }
+    var prev = monthStats(prevYm(ym));
+    var topMood = Object.keys(moodCount).sort(function (a, b) { return moodCount[b] - moodCount[a]; })[0];
+    var catSum = {}; CATS.forEach(function (c) { catSum[c.k] = 0; });
+    for (var k in store) {
+      if (k.slice(0, 7) !== ym) continue;
+      (store[k].expenses || []).forEach(function (x) {
+        if (catSum[x.cat] == null) catSum[x.cat] = 0;
+        catSum[x.cat] += (+x.amount || 0);
+      });
+    }
+    var catMax = Math.max.apply(null, CATS.map(function (c) { return catSum[c.k]; }).concat([1]));
+
+    var h = "";
+    h += '<div class="tree-stage"><canvas id="tree" aria-hidden="true"></canvas>' +
+      '<div class="tree-cap">已記錄 <b>' + recordedDays() + "</b> 天　·　連續 <b>" + streak() + "</b> 天</div></div>";
+
+    h += '<section class="block">' +
+      '<div class="month-nav">' +
+        '<button class="icon-btn" data-mo="-1" aria-label="上個月">‹</button>' +
+        '<span class="m">' + y + " 年 " + m + " 月　" + ss.n + "</span>" +
+        '<button class="icon-btn" data-mo="1" aria-label="下個月">›</button>' +
+      "</div>";
+
+    h += '<div class="cal">' +
+      WD.map(function (w) { return '<div class="wd">' + w + "</div>"; }).join("");
+    for (var b = 0; b < first.getDay(); b++) h += '<div class="cell blank"></div>';
+    for (var dd = 1; dd <= days; dd++) {
+      var ds2 = ym + "-" + pad(dd), en2 = store[ds2];
+      var hasIt = has(en2);
+      var inten = maxSpend > 0 && spend[ds2] ? 0.08 + 0.42 * (spend[ds2] / maxSpend) : 0;
+      var cls = "cell" + (hasIt ? " has" : "") + (ds2 === today() ? " today" : "") + (ds2 === state.date ? " sel" : "");
+      h += '<button class="' + cls + '" data-day="' + ds2 + '" style="--i:' + inten.toFixed(3) + '">' +
+        (moved(en2) ? '<span class="exdot" title="這天有動"></span>' : "") +
+        '<span class="mo">' + (hasIt ? (en2.mood || "·") : "") + "</span>" +
+        '<span class="dd">' + dd + "</span></button>";
+    }
+    h += "</div>";
+    h += '<div class="legend"><span class="ramp"></span><span>底色深淺＝當日花費</span>' +
+      '<span class="exdot" style="position:static;width:5px;height:5px;margin-left:6px"></span>' +
+      "<span>有運動</span></div>";
+    h += "</section>";
+
+    /* 月結 */
+    h += '<section class="block">' + label("coin", "本月結算");
+    var rate = doneAll ? Math.round(doneOk / doneAll * 100) : 0;
+    var prevRate = prev.doneAll ? Math.round(prev.doneOk / prev.doneAll * 100) : 0;
+    h += '<div class="sum-grid">' +
+      stat("總支出", money(total), "num", delta(total, prev.total, "", 0)) +
+      stat("平均每天", recorded ? money(Math.round(total / recorded)) : "—", "num") +
+      stat("運動天數", exDays + '<small> 天' + (exMin ? "　" + money(exMin) + " 分" : "") + "</small>", "num",
+        delta(exDays, prev.exDays, " 天", 1)) +
+      stat("完成率", doneAll ? rate + "<small>%　" + doneOk + "/" + doneAll + "</small>" : "—", "num",
+        doneAll && prev.doneAll ? delta(rate, prevRate, "%", 1) : "") +
+      stat("最常的心情", topMood ? topMood + ' <small>×' + moodCount[topMood] + "</small>" : "—", "emoji") +
+      stat("記錄天數", recorded + "<small> / " + days + " 天</small>", "num",
+        delta(recorded, prev.recorded, " 天", 1)) +
+      "</div>";
+
+    h += '<div class="bars" style="margin-top:20px">' + CATS.map(function (c) {
+      var v = catSum[c.k] || 0;
+      return '<div class="bar-row"><span class="cn">' + c.c + "</span>" +
+        '<span class="bar-track"><span class="bar-fill" style="width:' +
+        (v / catMax * 100).toFixed(1) + "%;background:var(--c-" + c.k + ')"></span></span>' +
+        '<span class="bv">' + (v ? money(v) : "—") + "</span></div>";
+    }).join("") + "</div>";
+    h += "</section>";
+
+    /* 本月感受摘要 */
+    var feels = [];
+    for (var kk in store) {
+      if (kk.slice(0, 7) === ym && (store[kk].feel || "").trim()) {
+        feels.push({ d: +kk.slice(8), t: store[kk].feel.trim() });
+      }
+    }
+    h += '<section class="block">' + label("drop", "本月寫下的話");
+    if (!feels.length) h += '<div class="empty">這個月還沒寫下感受。</div>';
+    else {
+      h += feels.sort(function (a, b) { return b.d - a.d; }).slice(0, 6).map(function (f) {
+        return '<div class="recap-note" style="margin-bottom:9px">' +
+          '<span style="font-family:var(--num);font-size:.72rem;color:var(--ink-faint)">' + f.d + " 日</span>　" +
+          esc(f.t.slice(0, 110)) + (f.t.length > 110 ? "…" : "") + "</div>";
+      }).join("");
+    }
+    h += "</section>";
+
+    view.innerHTML = h;
+    document.documentElement.setAttribute("data-season", ss.k);
+    document.getElementById("seasonName").textContent = ss.n;
+
+    view.querySelectorAll("[data-mo]").forEach(function (bt) {
+      bt.addEventListener("click", function () {
+        var yy = +state.month.slice(0, 4), mm = +state.month.slice(5, 7) + (+bt.dataset.mo);
+        if (mm < 1) { mm = 12; yy--; } if (mm > 12) { mm = 1; yy++; }
+        state.month = yy + "-" + pad(mm);
+        render();
+      });
+    });
+    view.querySelectorAll("[data-day]").forEach(function (bt) {
+      bt.addEventListener("click", function () {
+        state.date = bt.dataset.day;
+        state.tab = "today";
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+
+    growTree();
+  }
+  function stat(k, v, cls, delta) {
+    return '<div class="stat"><div class="k">' + k + '</div><div class="v ' +
+      (cls === "emoji" ? "emoji" : "") + '">' + v + (delta || "") + "</div></div>";
+  }
+
+  /* ── 跟上個月比 ───────────────────────────────────────── */
+  function prevYm(ym) {
+    var y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1;
+    if (m < 1) { m = 12; y--; }
+    return y + "-" + pad(m);
+  }
+  function monthStats(ym) {
+    var s = { total: 0, recorded: 0, exDays: 0, exMin: 0, doneAll: 0, doneOk: 0 };
+    for (var k in store) {
+      if (k.slice(0, 7) !== ym || !has(store[k])) continue;
+      var en = store[k];
+      s.recorded++; s.total += dayTotal(en);
+      if (moved(en)) { s.exDays++; s.exMin += (en.ex.min || 0); }
+      (en.done || []).forEach(function (x) { s.doneAll++; if (x.checked) s.doneOk++; });
+    }
+    return s;
+  }
+  /* 花費類：增加＝琥珀色；其他類：增加＝綠色（good=1 表示越多越好） */
+  function delta(now, was, unit, good) {
+    if (!was) return was === 0 && now > 0
+      ? '<span class="delta flat">上個月沒有資料</span>' : "";
+    var d = now - was;
+    if (!d) return '<span class="delta flat">跟上個月一樣</span>';
+    var pct = Math.round(Math.abs(d) / was * 100);
+    var up = d > 0;
+    var cls = (good ? up : !up) ? "down" : "up";
+    return '<span class="delta ' + cls + '">' + (up ? "▲" : "▼") + " " +
+      (unit === "%"
+        ? Math.abs(d) + " 個百分點"
+        : money(Math.abs(d)) + (unit || "") + "（" + pct + "%）") +
+      "比上月</span>";
+  }
+
+  /* ── 樹（Canvas，天數越多越茂密） ──────────────────────── */
+  function lcg(seed) {
+    var s = seed % 2147483647; if (s <= 0) s += 2147483646;
+    return function () { s = s * 16807 % 2147483647; return (s - 1) / 2147483646; };
+  }
+  /* p = 生長進度 0~1（省略就是畫完成的樹） */
+  function drawTree(p) {
+    var cv = document.getElementById("tree");
+    if (!cv) return;
+    if (p == null) p = 1;
+    var w = cv.clientWidth || 320, h = 190;
+    var dpr = window.devicePixelRatio || 1;
+    cv.width = w * dpr; cv.height = h * dpr; cv.style.height = h + "px";
+    var ctx = cv.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    var cs = getComputedStyle(document.documentElement);
+    var bark = cs.getPropertyValue("--ink-soft").trim() || "#666";
+    var leafC = cs.getPropertyValue("--leaf").trim() || "#8b0";
+    var days = recordedDays();
+    var depth = Math.max(2, Math.min(9, 2 + Math.floor(days / 4) + (days > 0 ? 1 : 0)));
+    var rnd = lcg(20260101 + days);
+    var per = 1 / depth;          /* 每一層枝條的出場時間窗 */
+
+    ctx.lineCap = "round";
+    /* lv = 第幾層（0 是主幹）。每一格動畫都要長出同一棵樹，所以 rnd()
+       的取用順序不能因進度而改變 —— 只跳過「畫」，不跳過「算」。 */
+    function branch(x, y, len, ang, wd, d, lv) {
+      if (d <= 0) return;
+      var x2 = x + Math.cos(ang) * len, y2 = y + Math.sin(ang) * len;
+      var grow = Math.max(0, Math.min(1, (p - lv * per) / (per * 1.6)));
+      if (grow > 0) {
+        ctx.globalAlpha = 0.9;
+        ctx.strokeStyle = bark;
+        ctx.lineWidth = Math.max(0.6, wd);
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + (x2 - x) * grow, y + (y2 - y) * grow);
+        ctx.stroke();
+      }
+      if (d === 1) {
+        var la = 0.55 + rnd() * 0.4, rx = 4.2 + rnd() * 2.4, ry = 2 + rnd() * 1.2;
+        if (grow >= 1) {                      /* 葉子等枝條長到底才冒出來 */
+          ctx.globalAlpha = la;
+          ctx.fillStyle = leafC;
+          ctx.beginPath();
+          ctx.ellipse(x2, y2, rx, ry, ang + 0.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        return;
+      }
+      var spread = 0.3 + rnd() * 0.24;
+      var s1 = 0.7 + rnd() * 0.1, s2 = 0.7 + rnd() * 0.1, sk = 0.7 + rnd() * 0.6;
+      var extra = rnd(), jit = rnd();
+      branch(x2, y2, len * s1, ang - spread, wd * 0.68, d - 1, lv + 1);
+      branch(x2, y2, len * s2, ang + spread * sk, wd * 0.68, d - 1, lv + 1);
+      if (d > 3 && extra > 0.55) {
+        branch(x2, y2, len * 0.5, ang + (jit - 0.5) * 0.5, wd * 0.5, d - 2, lv + 1);
+      }
+    }
+    /* 地平線：跟著進度從中間往兩邊拉開 */
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = cs.getPropertyValue("--line-strong").trim() || "#ccc";
+    ctx.lineWidth = 1;
+    var half = w * 0.34 * Math.min(1, p * 1.6);
+    ctx.beginPath();
+    ctx.moveTo(w / 2 - half, h - 6); ctx.lineTo(w / 2 + half, h - 6); ctx.stroke();
+
+    branch(w / 2, h - 7, days ? 40 + Math.min(16, days * 0.6) : 22, -Math.PI / 2, 5.5, depth, 0);
+    ctx.globalAlpha = 1;
+  }
+
+  /* 進花園時讓樹從地面長起來 */
+  var treeTimer = null;
+  function growTree() {
+    if (treeTimer) cancelAnimationFrame(treeTimer);
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      drawTree(1); return;
+    }
+    var t0 = null, dur = 950;
+    function step(ts) {
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      drawTree(p * p * (3 - 2 * p));          /* smoothstep：起步與收尾都慢 */
+      if (p < 1) treeTimer = requestAnimationFrame(step);
+    }
+    treeTimer = requestAnimationFrame(step);
+  }
+
+  /* ── 白底／黑底切換 ───────────────────────────────────── */
+  /* 半實心圓 —— 淺深切換的通用圖示 */
+  var MODE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">' +
+    '<circle cx="12" cy="12" r="8"/>' +
+    '<path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor" stroke="none"/></svg>';
+
+  function isDark() {
+    if (state.mode) return state.mode === "dark";
+    var t = document.documentElement.getAttribute("data-theme");
+    if (t) return t === "dark";
+    return !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  }
+  function applyMode() {
+    var r = document.documentElement;
+    if (state.mode) r.setAttribute("data-mode", state.mode);
+    else r.removeAttribute("data-mode");
+    try {
+      if (state.mode) localStorage.setItem(MODE_KEY, state.mode);
+      else localStorage.removeItem(MODE_KEY);
+    } catch (e) { /* 無痕模式忽略 */ }
+
+    var b = document.getElementById("btnMode");
+    b.innerHTML = MODE_ICON;
+    b.setAttribute("title",
+      (state.mode ? (state.mode === "dark" ? "黑底" : "白底") : "跟隨系統") +
+      "（點一下切換成" + (isDark() ? "白" : "黑") + "底）");
+  }
+
+  /* ── 備份面板 ─────────────────────────────────────────── */
+  function openSheet() {
+    var bg = document.createElement("div");
+    bg.className = "sheet-bg";
+    bg.innerHTML = '<div class="sheet" role="dialog" aria-label="資料與備份">' +
+      "<h2>資料</h2><p>記錄只存在這台裝置的瀏覽器裡。換手機或清瀏覽器資料前，先匯出一份。</p>" +
+      '<div class="acts">' +
+        '<button data-a="json"><span>匯出備份檔</span><span class="hint">JSON</span></button>' +
+        '<button data-a="md"><span>匯出可讀日記</span><span class="hint">Markdown</span></button>' +
+        '<label><span>匯入備份檔</span><span class="hint">合併 JSON</span>' +
+          '<input type="file" accept=".json,application/json" id="impFile" class="sr" /></label>' +
+      "</div>" +
+      '<button class="close">關閉</button></div>';
+    document.body.appendChild(bg);
+    bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.remove(); });
+    bg.querySelector(".close").addEventListener("click", function () { bg.remove(); });
+    bg.querySelector('[data-a="json"]').addEventListener("click", function () {
+      download("今日草木-備份-" + today() + ".json", JSON.stringify(store, null, 2), "application/json");
+    });
+    bg.querySelector('[data-a="md"]').addEventListener("click", function () {
+      download("今日草木-" + today() + ".md", toMarkdown(), "text/markdown");
+    });
+    bg.querySelector("#impFile").addEventListener("change", function (ev) {
+      var f = ev.target.files && ev.target.files[0];
+      if (!f) return;
+      var r = new FileReader();
+      r.onload = function () {
+        try {
+          var inc = JSON.parse(r.result), n = 0;
+          for (var k in inc) { if (/^\d{4}-\d{2}-\d{2}$/.test(k)) { store[k] = inc[k]; n++; } }
+          save(); bg.remove(); render();
+          alert("已匯入 " + n + " 天的記錄。");
+        } catch (e) { alert("這個檔案讀不出來，請確認是本工具匯出的 JSON。"); }
+      };
+      r.readAsText(f);
+    });
+  }
+  function download(name, text, type) {
+    var a = document.createElement("a");
+    var url = URL.createObjectURL(new Blob([text], { type: type + ";charset=utf-8" }));
+    a.href = url; a.download = name; a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  }
+  function toMarkdown() {
+    var keys = Object.keys(store).filter(function (k) { return has(store[k]); }).sort().reverse();
+    var out = ["# 今日草木", ""];
+    keys.forEach(function (k) {
+      var e = store[k], d = toDate(k);
+      out.push("## " + k + "（星期" + WD[d.getDay()] + "）" + (e.mood ? "　" + e.mood : ""));
+      if (e.expenses && e.expenses.length) {
+        out.push("", "**記帳**　小計 " + money(dayTotal(e)), "");
+        out.push("| 項目 | 分類 | 金額 |", "| --- | --- | ---: |");
+        e.expenses.forEach(function (x) {
+          var c = CATS.filter(function (q) { return q.k === x.cat; })[0] || CATS[6];
+          out.push("| " + x.item + " | " + c.n + " | " + money(+x.amount || 0) + " |");
+        });
+      }
+      if (e.done && e.done.length) {
+        out.push("", "**今日完成**", "");
+        e.done.forEach(function (t) {
+          var age = t.age || t.from || 0;
+          out.push("- [" + (t.checked ? "x" : " ") + "] " + t.text +
+            (age && !t.checked ? "（" + ageTag(age) + "）" : ""));
+        });
+      }
+      if (e.ex && e.ex.kind) {
+        var exn = (EX.filter(function (q) { return q.k === e.ex.kind; })[0] || {}).n || e.ex.kind;
+        out.push("", "**運動**　" + exn + (e.ex.min ? "　" + e.ex.min + " 分鐘" : ""));
+      }
+      if ((e.feel || "").trim()) out.push("", "**今天感受到**", "", "> " + e.feel.trim().replace(/\n/g, "\n> "));
+      if (e.tomorrow && e.tomorrow.length) {
+        out.push("", "**明天想做**", "");
+        e.tomorrow.forEach(function (t) { out.push("- " + t.text); });
+      }
+      out.push("", "---", "");
+    });
+    return out.join("\n");
+  }
+
+  /* ── 主題 / 導覽 ──────────────────────────────────────── */
+  function render() {
+    document.querySelectorAll("nav.tabs button").forEach(function (b) {
+      b.setAttribute("aria-current", String(b.dataset.tab === state.tab));
+    });
+    if (state.tab === "today") renderToday(); else renderGarden();
+  }
+
+  document.querySelectorAll("nav.tabs button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      state.tab = b.dataset.tab;
+      if (state.tab === "garden") state.month = state.date.slice(0, 7);
+      render();
+      window.scrollTo({ top: 0 });
+    });
+  });
+  document.getElementById("btnSheet").addEventListener("click", openSheet);
+  document.getElementById("btnMode").addEventListener("click", function () {
+    state.mode = isDark() ? "light" : "dark";
+    applyMode();
+    render();   /* 樹的顏色取自 computed style，換底色要重畫 */
+  });
+  window.addEventListener("resize", function () {
+    if (state.tab === "garden") drawTree();
+  });
+
+  /* 每天第一次打開，回到今天 */
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden && state.tab === "today" && state.date !== today() && state.date < today()) return;
+  });
+
+  document.documentElement.setAttribute("data-skin", "parasol");
+  applyMode();
+  render();
+})();
+</script>
+</body>
+</html>
