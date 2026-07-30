@@ -630,6 +630,9 @@
     font-variant-numeric: tabular-nums;
   }
   .freq-hint { font-size: .78rem; color: var(--ink-faint); margin-bottom: 12px; }
+  .freq-cap {
+    font-size: .64rem; letter-spacing: .16em; color: var(--ink-faint); margin-bottom: 7px;
+  }
 
   /* ── 順延標籤 ─────────────────────────────────────────── */
   .from-tag.aged { color: var(--c-food); border-color: color-mix(in oklab, var(--c-food) 40%, var(--line)); }
@@ -798,6 +801,8 @@
   var store = load();
   var state = {
     tab: "today", date: today(), month: today().slice(0, 7), newCat: "food",
+    /* 使用者自己翻到別的日期時為 true —— 跨日時就不要把他拉回今天 */
+    pinned: false,
     /* "" = 跟隨系統／Claude 頁面的深淺 */
     mode: pref(MODE_KEY, "", ["light", "dark"])
   };
@@ -1019,6 +1024,7 @@
       b.addEventListener("click", function () {
         state.date = shift(state.date, +b.dataset.go);
         if (state.date > today()) state.date = today();
+        state.pinned = state.date !== today();
         render();
       });
     });
@@ -1100,7 +1106,8 @@
       box.innerHTML = '<div class="freq-hint">記過幾次之後，常用項目會自己出現在這裡。</div>';
       return;
     }
-    box.innerHTML = '<div class="freq">' + list.map(function (f, i) {
+    box.innerHTML = '<div class="freq-cap">常用 · 點一下帶入</div>' +
+      '<div class="freq">' + list.map(function (f, i) {
       return '<button data-freq="' + i + '"><span class="dot" style="background:var(--c-' + f.cat + ')"></span>' +
         esc(f.item) + '<span class="m">' + money(f.amount) + "</span></button>";
     }).join("") + "</div>";
@@ -1372,6 +1379,7 @@
     view.querySelectorAll("[data-day]").forEach(function (bt) {
       bt.addEventListener("click", function () {
         state.date = bt.dataset.day;
+        state.pinned = state.date !== today();
         state.tab = "today";
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1674,10 +1682,28 @@
     if (state.tab === "garden") drawTree();
   });
 
-  /* 每次回到前景就順便看有沒有新版 */
+  /* ── 跨日就回到今天 ───────────────────────────────────────
+     App 放在背景整晚、隔天再打開時不會重新載入，state.date 還是昨天，
+     整頁就會停在昨天的記錄。回到前景時（或開著過午夜時）補正。
+     使用者自己翻去看舊日期（pinned）就不要亂動他的畫面。 */
+  function rollToToday() {
+    if (state.pinned || state.date === today()) return;
+    var el = document.activeElement;
+    /* 正在打字就先放過，免得重繪把輸入焦點弄掉 */
+    if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;
+    state.date = today();
+    if (state.tab === "today") render();
+  }
+
+  /* 每次回到前景：補正日期，順便看有沒有新版 */
   document.addEventListener("visibilitychange", function () {
-    if (!document.hidden) checkUpdate();
+    if (document.hidden) return;
+    rollToToday();
+    checkUpdate();
   });
+  window.addEventListener("focus", rollToToday);
+  /* 一直開著沒關的情況，每分鐘看一次日期有沒有翻頁 */
+  setInterval(rollToToday, 60000);
 
   document.documentElement.setAttribute("data-skin", "parasol");
   applyMode();
