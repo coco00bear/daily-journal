@@ -813,7 +813,7 @@
   /* ── 資料 ────────────────────────────────────────────── */
   var MODE_KEY = "jincao-mode";
   /* build.js 會把這行換成建置日期＋內容雜湊；直接開來源檔就維持 dev */
-  var BUILD = "2026-07-30 · 6eaf58b";
+  var BUILD = "2026-07-31 · d50bad7";
   var store = load();
   var state = {
     tab: "today", date: today(), month: today().slice(0, 7), newCat: "food",
@@ -866,10 +866,15 @@
     if (!e && create) {
       e = store[date] = { expenses: [], done: [], feel: "", tomorrow: [], mood: "", ex: { kind: "", min: 0 } };
     }
-    if (e && !e.ex) e.ex = { kind: "", min: 0 };
+    if (!e) return null;
+    /* 舊版或匯入的資料可能缺欄位，先補齊，免得後面 push 炸掉整個畫面 */
+    if (!e.expenses) e.expenses = [];
+    if (!e.done) e.done = [];
+    if (!e.tomorrow) e.tomorrow = [];
+    if (!e.ex) e.ex = { kind: "", min: 0 };
     /* 舊資料的 from 欄位轉成 age */
-    if (e && e.done) e.done.forEach(function (t) { if (t.from && !t.age) t.age = t.from; });
-    return e || null;
+    e.done.forEach(function (t) { if (t.from && !t.age) t.age = t.from; });
+    return e;
   }
   function has(e) {
     return !!e && !!((e.expenses && e.expenses.length) || (e.done && e.done.length) ||
@@ -879,21 +884,37 @@
   function moved(e) { return !!(e && e.ex && e.ex.kind && e.ex.kind !== "none"); }
   function uid() { return Math.random().toString(36).slice(2, 9); }
 
-  /* 昨天的「明天想做」＋昨天沒做完的，一起流進今天的「今日完成」。
-     age = 已經跟著走幾天；打勾或按「放下」就不再跟。 */
+  /* 上一個有記錄的日子留下的「明天想做」＋那天沒做完的，一起流進今天的「今日完成」。
+     age = 已經跟著走幾天；打勾或按「放下」就不再跟。
+
+     每一筆都用「來源日期/來源 id」記在 e.picked 裡，所以這件事可以放心重跑：
+     事後才回頭補寫昨天的「明天想做」，下次進今天照樣補得進來；
+     今天已經打勾或放下的也不會又冒出來。
+     （舊版是用一個 e.carried 旗標，鎖上以後就再也不補帶了。） */
+  var CARRY_GAP = 7;   /* 中間空幾天還要接上；超過就當新的一段開始 */
   function carry(date) {
     var e = entry(date, true);
-    if (e.carried) return;
-    var p = store[shift(date, -1)];
-    if (!p) return;
+    var src = null;
+    for (var i = 1; i <= CARRY_GAP; i++) {
+      var d = shift(date, -i);
+      if (has(store[d])) { src = { date: d, gap: i }; break; }
+    }
+    if (!src) return;
+    var p = store[src.date];
+    if (!e.picked) e.picked = {};
 
     var pool = [];
     (p.tomorrow || []).forEach(function (t) {
-      if (t.text && t.text.trim()) pool.push({ text: t.text.trim(), age: 1 });
+      if (t.text && t.text.trim()) {
+        pool.push({ key: src.date + "/" + (t.id || t.text), text: t.text.trim(), age: src.gap });
+      }
     });
     (p.done || []).forEach(function (t) {
       if (!t.checked && t.text && t.text.trim()) {
-        pool.push({ text: t.text.trim(), age: (t.age || 0) + 1 });
+        pool.push({
+          key: src.date + "/" + (t.id || t.text),
+          text: t.text.trim(), age: (t.age || 0) + src.gap
+        });
       }
     });
 
@@ -901,16 +922,16 @@
     pool.sort(function (a, b) { return b.age - a.age; });
 
     var seen = {}, added = 0;
-    (e.done || []).forEach(function (t) { seen[t.text.trim()] = true; });
+    e.done.forEach(function (t) { seen[t.text.trim()] = true; });
     pool.forEach(function (c) {
-      var k = c.text;
-      if (seen[k]) return;
-      seen[k] = true;
+      if (e.picked[c.key] || seen[c.text]) return;
+      e.picked[c.key] = 1;
+      seen[c.text] = true;
       e.done.push({ id: uid(), text: c.text, checked: false, age: c.age });
       added++;
     });
 
-    if (added || has(p)) { e.carried = true; save(true); }
+    if (added) save(true);
   }
   function ageTag(n) {
     if (!n) return "";
